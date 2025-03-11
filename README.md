@@ -137,6 +137,10 @@ Example:
 </p>
 -->
 
+<p align="center" justify="center">
+  <img src="images/DomainModel.png" width=500/>
+</p>
+
 
 ## Architecture and Design
 <!--
