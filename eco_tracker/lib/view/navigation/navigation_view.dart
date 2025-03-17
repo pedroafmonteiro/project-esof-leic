@@ -12,6 +12,7 @@ class NavigationView extends StatefulWidget {
 
 class _NavigationViewState extends State<NavigationView> {
   int currentPageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +35,23 @@ class _NavigationViewState extends State<NavigationView> {
           });
         },
       ),
-      body:
-          <Widget>[
-            HomeView(),
-            StatisticsView(),
-            DevicesView(),
-          ][currentPageIndex],
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        child: _getPage(currentPageIndex),
+      ),
     );
+  }
+
+  Widget _getPage(int index) {
+    switch (index) {
+      case 0:
+        return HomeView(key: ValueKey<int>(0));
+      case 1:
+        return StatisticsView(key: ValueKey<int>(1));
+      case 2:
+        return DevicesView(key: ValueKey<int>(2));
+      default:
+        return HomeView(key: ValueKey<int>(0));
+    }
   }
 }
