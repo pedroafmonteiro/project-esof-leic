@@ -1,13 +1,11 @@
+import 'package:eco_tracker/view/common/general_page.dart';
 import 'package:flutter/material.dart';
 
-class DevicesView extends StatelessWidget {
-  const DevicesView({super.key});
+class DevicesView extends GeneralPage {
+  const DevicesView({super.key}) : super(title: "Devices");
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Devices')),
-      body: Center(child: Text('To be implemented.')),
-    );
+  Widget buildBody() {
+    return Center(child: Text('To be implemented.'));
   }
 }

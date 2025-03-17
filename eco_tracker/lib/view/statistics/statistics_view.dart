@@ -1,13 +1,11 @@
+import 'package:eco_tracker/view/common/general_page.dart';
 import 'package:flutter/material.dart';
 
-class StatisticsView extends StatelessWidget {
-  const StatisticsView({super.key});
+class StatisticsView extends GeneralPage {
+  const StatisticsView({super.key}) : super(title: "Statistics");
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Statistics')),
-      body: Center(child: Text('To be implemented.')),
-    );
+  Widget buildBody() {
+    return Center(child: Text('To be implemented.'));
   }
 }

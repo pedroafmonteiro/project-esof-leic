@@ -1,13 +1,11 @@
+import 'package:eco_tracker/view/common/general_page.dart';
 import 'package:flutter/material.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+class HomeView extends GeneralPage {
+  const HomeView({super.key}) : super(title: 'Home');
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Center(child: Text('To be implemented.')),
-    );
+  Widget buildBody() {
+    return Center(child: Text('To be implemented. ahahahhah'));
   }
 }
