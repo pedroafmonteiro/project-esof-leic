@@ -4,9 +4,13 @@ import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MainApp());
+  _setSystemUI();
+}
+
+void _setSystemUI() {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
+    const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
   );
 }
 
@@ -15,7 +19,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: NavigationView(),
     );
