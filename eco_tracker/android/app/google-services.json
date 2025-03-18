@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "780104590816",
+    "project_id": "ecotracker-esof",
+    "storage_bucket": "ecotracker-esof.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:780104590816:android:15bce24ff9be25853c3785",
+        "android_client_info": {
+          "package_name": "com.esof.eco_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU9Tz8UCTgK1mbQjFJDWZE1a7pB4TWcCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:780104590816:android:12b7a9c70a4b11f03c3785",
+        "android_client_info": {
+          "package_name": "com.esof.ecotracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU9Tz8UCTgK1mbQjFJDWZE1a7pB4TWcCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

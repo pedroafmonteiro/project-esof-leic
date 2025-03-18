@@ -1,9 +1,16 @@
+import 'package:eco_tracker/firebase_options.dart';
 import 'package:eco_tracker/view/navigation/navigation_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
   runApp(const MainApp());
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   _setSystemUI();
 }
 
