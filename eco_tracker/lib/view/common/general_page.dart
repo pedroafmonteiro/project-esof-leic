@@ -1,4 +1,6 @@
+import 'package:eco_tracker/providers/authentication_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 abstract class GeneralPage extends StatelessWidget {
   const GeneralPage({
@@ -16,13 +18,15 @@ abstract class GeneralPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AuthenticationProvider>(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
         actions: [
           IconButton(
             onPressed: null,
-            icon: Icon(Icons.account_circle_outlined),
+            icon: provider.avatar ?? Icon(Icons.account_circle),
           ),
         ],
       ),
