@@ -2,6 +2,7 @@ import 'package:eco_tracker/view/devices/devices_view.dart';
 import 'package:eco_tracker/view/home/home_view.dart';
 import 'package:eco_tracker/view/statistics/statistics_view.dart';
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 
 class NavigationView extends StatefulWidget {
   const NavigationView({super.key});
@@ -35,8 +36,15 @@ class _NavigationViewState extends State<NavigationView> {
           });
         },
       ),
-      body: AnimatedSwitcher(
+      body: PageTransitionSwitcher(
         duration: Duration(milliseconds: 300),
+        transitionBuilder:
+            (child, animation, secondaryAnimation) => SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.horizontal,
+              child: child,
+            ),
         child: _getPage(currentPageIndex),
       ),
     );
