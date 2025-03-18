@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+
+abstract class GeneralPage extends StatelessWidget {
+  const GeneralPage({
+    super.key,
+    required this.title,
+    required this.hasFAB,
+    this.fabIcon,
+  });
+
+  final String title;
+  final bool hasFAB;
+  final Icon? fabIcon;
+
+  Widget buildBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          IconButton(
+            onPressed: null,
+            icon: Icon(Icons.account_circle_outlined),
+          ),
+        ],
+      ),
+      floatingActionButton:
+          hasFAB
+              ? FloatingActionButton(
+                onPressed: null,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+                child: fabIcon,
+              )
+              : null,
+      body: buildBody(),
+    );
+  }
+}
