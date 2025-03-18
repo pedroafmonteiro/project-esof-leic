@@ -7,6 +7,6 @@ class HomeView extends GeneralPage {
 
   @override
   Widget buildBody() {
-    return Center(child: Text('To be implemented. ahahahhah'));
+    return Center(child: Text('To be implemented.'));
   }
 }
