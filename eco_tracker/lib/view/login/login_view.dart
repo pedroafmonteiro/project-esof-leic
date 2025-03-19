@@ -8,23 +8,17 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AuthenticationProvider>(context);
-    final user = provider.currentUser;
 
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (user == null)
-            Center(
-              child: ElevatedButton(
-                onPressed: provider.signIn,
-                child: Text('Sign in with Google'),
-              ),
+          Center(
+            child: ElevatedButton(
+              onPressed: provider.signIn,
+              child: Text('Sign in with Google'),
             ),
-          if (user != null) ...[
-            provider.avatar ?? Container(),
-            Text(user.email),
-          ],
+          ),
         ],
       ),
     );

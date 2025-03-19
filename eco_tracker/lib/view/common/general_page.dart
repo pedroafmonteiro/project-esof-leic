@@ -18,15 +18,31 @@ abstract class GeneralPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AuthenticationProvider>(context);
-    
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
         actions: [
-          IconButton(
-            onPressed: null,
-            icon: provider.avatar ?? Icon(Icons.account_circle),
+          Consumer<AuthenticationProvider>(
+            builder: (context, provider, child) {
+              return IconButton(
+                onPressed: null,
+                icon: FutureBuilder<String?>(
+                  future: provider.getUserAvatar(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Icon(Icons.account_circle_outlined);
+                    }
+                    if (snapshot.hasData && snapshot.data != null) {
+                      return CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(snapshot.data!),
+                      );
+                    }
+                    return const Icon(Icons.account_circle_outlined);
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
