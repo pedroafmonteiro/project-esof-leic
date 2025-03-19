@@ -29,7 +29,8 @@ abstract class GeneralPage extends StatelessWidget {
                 icon: FutureBuilder<String?>(
                   future: provider.getUserAvatar(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting ||
+                        snapshot.connectionState == ConnectionState.none) {
                       return const Icon(Icons.account_circle_outlined);
                     }
                     if (snapshot.hasData && snapshot.data != null) {
