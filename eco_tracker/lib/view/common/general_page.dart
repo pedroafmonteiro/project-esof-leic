@@ -1,4 +1,6 @@
+import 'package:eco_tracker/providers/authentication_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 abstract class GeneralPage extends StatelessWidget {
   const GeneralPage({
@@ -20,9 +22,28 @@ abstract class GeneralPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
-          IconButton(
-            onPressed: null,
-            icon: Icon(Icons.account_circle_outlined),
+          Consumer<AuthenticationProvider>(
+            builder: (context, provider, child) {
+              return IconButton(
+                onPressed: null,
+                icon: FutureBuilder<String?>(
+                  future: provider.getUserAvatar(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting ||
+                        snapshot.connectionState == ConnectionState.none) {
+                      return const Icon(Icons.account_circle_outlined);
+                    }
+                    if (snapshot.hasData && snapshot.data != null) {
+                      return CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(snapshot.data!),
+                      );
+                    }
+                    return const Icon(Icons.account_circle_outlined);
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),

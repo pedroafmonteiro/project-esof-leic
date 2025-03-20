@@ -1,9 +1,27 @@
+import 'package:eco_tracker/firebase_options.dart';
+import 'package:eco_tracker/providers/authentication_provider.dart';
+import 'package:eco_tracker/view/login/login_view.dart';
 import 'package:eco_tracker/view/navigation/navigation_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+      ],
+      child: const MainApp(),
+    ),
+  );
+
   _setSystemUI();
 }
 
@@ -19,9 +37,20 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: NavigationView(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasData) {
+            return NavigationView();
+          } else {
+            return LoginView();
+          }
+        },
+      ),
     );
   }
 }
