@@ -14,11 +14,16 @@ abstract class GeneralPage extends StatelessWidget {
   final bool hasFAB;
   final Icon? fabIcon;
 
+  void fabFunction(BuildContext context) {
+    return;
+  }
+
   Widget buildBody();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(title),
         actions: [
@@ -46,11 +51,12 @@ abstract class GeneralPage extends StatelessWidget {
             },
           ),
         ],
+        actionsPadding: EdgeInsets.only(right: 8.0),
       ),
       floatingActionButton:
           hasFAB
               ? FloatingActionButton(
-                onPressed: null,
+                onPressed: () => fabFunction(context),
                 backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
                 foregroundColor: Theme.of(context).colorScheme.onSurface,
                 child: fabIcon,
