@@ -1,4 +1,4 @@
-import 'package:eco_tracker/providers/authentication_provider.dart';
+import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +27,7 @@ abstract class GeneralPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
-          Consumer<AuthenticationProvider>(
+          Consumer<AuthenticationService>(
             builder: (context, provider, child) {
               return IconButton(
                 onPressed: null,
@@ -62,7 +62,10 @@ abstract class GeneralPage extends StatelessWidget {
                 child: fabIcon,
               )
               : null,
-      body: buildBody(),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: buildBody(),
+      ),
     );
   }
 }

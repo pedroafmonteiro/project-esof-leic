@@ -1,7 +1,8 @@
 import 'package:eco_tracker/firebase_options.dart';
-import 'package:eco_tracker/providers/authentication_provider.dart';
+import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:eco_tracker/view/login/login_view.dart';
 import 'package:eco_tracker/view/navigation/navigation_view.dart';
+import 'package:eco_tracker/viewmodel/device_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+        ChangeNotifierProvider(create: (_) => AuthenticationService()),
+        ChangeNotifierProvider(create: (_) => DeviceViewModel()),
       ],
       child: const MainApp(),
     ),
@@ -43,7 +45,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
-          seedColor: Colors.orange,
+          seedColor: Colors.green,
         ),
       ),
       home: StreamBuilder<User?>(
