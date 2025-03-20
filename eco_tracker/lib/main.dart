@@ -1,8 +1,8 @@
 import 'package:eco_tracker/firebase_options.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
-import 'package:eco_tracker/view/login/login_view.dart';
-import 'package:eco_tracker/view/navigation/navigation_view.dart';
-import 'package:eco_tracker/viewmodel/device_view_model.dart';
+import 'package:eco_tracker/views/login/login_view.dart';
+import 'package:eco_tracker/views/navigation/navigation_view.dart';
+import 'package:eco_tracker/viewmodels/device_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
-import 'package:eco_tracker/model/device_model.dart';
-import 'package:eco_tracker/view/common/general_bottom_sheet.dart';
-import 'package:eco_tracker/view/common/general_page.dart';
-import 'package:eco_tracker/viewmodel/device_view_model.dart';
+import 'package:eco_tracker/models/device_model.dart';
+import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
+import 'package:eco_tracker/views/common/general_page.dart';
+import 'package:eco_tracker/viewmodels/device_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -155,11 +155,7 @@ class DevicesView extends GeneralPage {
             },
           );
         }
-        return Center(child: Column(
-          children: [
-            Text("You haven't added any devices."),
-          ],
-        ));
+        return Center(child: Text("You haven't added any devices."));
       },
     );
   }
