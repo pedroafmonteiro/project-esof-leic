@@ -114,7 +114,7 @@ class DevicesView extends GeneralPage {
                               model: modelController.text,
                               manufacturer: manufacturerController.text,
                               category: categoryController.text,
-                              powerConsumption: double.parse(
+                              powerConsumption: int.parse(
                                 powerConsumptionController.text,
                               ),
                             );

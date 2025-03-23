@@ -7,7 +7,7 @@
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.780104590816-6n7ovpv6cv61bud0e4ihj1rt3k358acq</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>780104590816-7gdr2ln7gl27j1rd0u353er54vhrgrmu.apps.googleusercontent.com</string>
+	<string>780104590816-29casc0ujtqs6fp473md0efdtt7el974.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBiEYOLNfOARFrSpTK3jozbGzYsNZTNPdc</string>
 	<key>GCM_SENDER_ID</key>
@@ -32,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:780104590816:ios:10631879207ee8c63c3785</string>
+	<key>DATABASE_URL</key>
+	<string>https://ecotracker-esof-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>
