@@ -6,12 +6,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthenticationService with ChangeNotifier {
   GoogleSignInAccount? _currentUser;
   String? _cachedAvatarUrl;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn;
+  final FirebaseAuth _auth;
 
   GoogleSignInAccount? get currentUser => _currentUser;
 
-  AuthenticationService() {
+  AuthenticationService({
+    FirebaseAuth? firebaseAuth,
+    GoogleSignIn? googleSignIn,
+  }) : _auth = firebaseAuth ?? FirebaseAuth.instance,
+       _googleSignIn = googleSignIn ?? GoogleSignIn() {
     _loadCachedAvatar();
 
     _auth.authStateChanges().listen((User? user) {
