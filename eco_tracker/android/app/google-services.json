@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "780104590816",
+    "firebase_url": "https://ecotracker-esof-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "ecotracker-esof",
     "storage_bucket": "ecotracker-esof.firebasestorage.app"
   },
@@ -14,11 +15,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "780104590816-29casc0ujtqs6fp473md0efdtt7el974.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.ecotracker",
+            "certificate_hash": "72e8a9f36f6fe68d37781c1c7fa847cdafa3cfe2"
+          }
+        },
+        {
           "client_id": "780104590816-7gdr2ln7gl27j1rd0u353er54vhrgrmu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.esof.ecotracker",
             "certificate_hash": "8b46114adcec783aa9c42f1f33d0ed246529886c"
+          }
+        },
+        {
+          "client_id": "780104590816-v2f135hjtg3bvnmqkp1s2h795s1710u4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esof.ecotracker",
+            "certificate_hash": "5fe3e3686793a85a782d9a35951d7577042ea7e2"
           }
         },
         {

@@ -1,4 +1,4 @@
-import 'package:eco_tracker/providers/authentication_provider.dart';
+import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,7 +7,7 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AuthenticationProvider>(context);
+    final provider = Provider.of<AuthenticationService>(context);
 
     return Scaffold(
       body: Column(
