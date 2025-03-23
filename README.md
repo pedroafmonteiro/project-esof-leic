@@ -61,6 +61,10 @@ To learn more about how to write a good product vision, please see:
 * [20 Inspiring Vision Statement Examples (2019 Updated), by lifehack.org](https://www.lifehack.org/articles/work/20-sample-vision-statement-for-the-new-startup.html)
 -->
 
+EcoTracker is an application that allows users to track the energy consumption of their appliances while enabling companies to register their products with accurate consumption data. The platform provides greater transparency and control over energy usage, promoting efficiency and sustainability, "the Fitbit for home energy consumption—track, optimize, and save."
+
+The goal for our app is to revolutionize energy efficiency by providing our customers with a tool that lets them be aware of their energy consumption and waste, promoting sustainability and a greener future, while also facilitating the access and selling of appliances by allowing manufacturers to provide detailed information about their products. That is why our motto is "Empowering consumers and businesses for a more sustainable future."
+
 
 ### Features and Assumptions
 <!-- 
@@ -71,6 +75,8 @@ Indicate an  initial/tentative list of high-level features - high-level capabili
 
 Optionally, indicate an initial/tentative list of assumptions that you are doing about the app and dependencies of the app to other systems.
 -->
+
+
 
 ### Elevator Pitch
 <!-- 
@@ -127,19 +133,34 @@ At the end, it is good to add a rough indication of the value of the user story 
 
 ### Domain model
 
-<!-- 
-To better understand the context of the software system, it is useful to have a simple UML class diagram with all and only the key concepts (names, attributes) and relationships involved of the problem domain addressed by your app. 
-Also provide a short textual description of each concept (domain class). 
-
-Example:
- <p align="center" justify="center">
-  <img src="https://github.com/FEUP-LEIC-ES-2022-23/templates/blob/main/images/DomainModel.png"/>
+ <p align="center">
+  <img src="images/DomainModel.png" 
+  alt=" The diagram represents the structure of the energy consumption monitoring app. 
+        Users can add devices to record their energy consumption. 
+        Companies provide information about devices they designed.
+        The data is organized into reports in the form of notifications, which the users receive."/>
 </p>
--->
 
-<p align="center" justify="center">
-  <img src="images/DomainModel.png" width=500/>
-</p>
+**User**
+Represents the users of the application, containing essential information such as name, email and password. A user can add devices and receive notifications related to energy consumption.
+
+**Device**
+Models the monitored appliances, storing information such as brand, model, power and energy rating. Each device belongs to a user and records energy consumption data.
+
+**Consumption**
+Records the energy consumption of devices, including the amount of energy used (kWh), a timestamp to indicate when consumption was recorded and an estimate of the cost.
+
+**Report**
+Stores aggregated information about total energy consumption in a given period, including the date the report was generated.
+
+**Notification**
+Represents messages sent to users, containing details such as the message, priority and status (read or unread). Notifications can be triggered by high consumption events or other relevant alerts.
+
+**Location**
+Defines where devices are installed, and can represent physical locations such as "Kitchen", "Living Room" or even different buildings.
+
+**Maintainer**
+Represents companies responsible for adding information about devices, allowing users to choose models from a predefined database.
 
 
 ## Architecture and Design
@@ -155,27 +176,28 @@ In this section you should start by briefly describing the components of the pro
 
 
 ### Logical architecture
-<!--
-The purpose of this subsection is to document the high-level logical structure of the code (Logical View), using a UML diagram with logical packages, without the worry of allocating to components, processes or machines.
 
-It can be beneficial to present the system in a horizontal decomposition, defining layers and implementation concepts, such as the user interface, business logic and concepts.
-
-Example of _UML package diagram_ showing a _logical view_ of the Eletronic Ticketing System (to be accompanied by a short description of each package):
-
-![LogicalView](https://user-images.githubusercontent.com/9655877/160585416-b1278ad7-18d7-463c-b8c6-afa4f7ac7639.png)
--->
-
+<p align="center">
+  <img src="images/PackageDiagram.png" 
+  alt=" The diagram represents the application architecture in layers, with the UI, the
+        controller which processes requests and communicates with the service layer, 
+        for business logic (consumption calculation, reports, notifications).
+        The model layer contains the main data structures, and the persistence layer
+        manages the data using repositories. The external layer serves for
+        external services, like emails and APIs.
+        "/>
+</p>
 
 ### Physical architecture
-<!--
-The goal of this subsection is to document the high-level physical structure of the software system (machines, connections, software components installed, and their dependencies) using UML deployment diagrams (Deployment View) or component diagrams (Implementation View), separate or integrated, showing the physical structure of the system.
 
-It should describe also the technologies considered and justify the selections made. Examples of technologies relevant for ESOF are, for example, frameworks for mobile applications (such as Flutter).
-
-Example of _UML deployment diagram_ showing a _deployment view_ of the Eletronic Ticketing System (please notice that, instead of software components, one should represent their physical/executable manifestations for deployment, called artifacts in UML; the diagram should be accompanied by a short description of each node and artifact):
-
-![DeploymentView](https://user-images.githubusercontent.com/9655877/160592491-20e85af9-0758-4e1e-a704-0db1be3ee65d.png)
--->
+<p align="center">
+  <img src="images/DeploymentDiagram.png" 
+  alt=" This diagram represents the physical architecture of the application, 
+        highlighting the main components and their connections. 
+        It follows a client-server architecture, with interaction between the app, 
+        an application server, and a database. It also may include interactions with external databases.
+        "/>
+</p>
 
 
 ### Vertical prototype

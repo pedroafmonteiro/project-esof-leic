@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthenticationProvider with ChangeNotifier {
+class AuthenticationService with ChangeNotifier {
   GoogleSignInAccount? _currentUser;
   String? _cachedAvatarUrl;
   final GoogleSignIn _googleSignIn;
@@ -11,9 +11,11 @@ class AuthenticationProvider with ChangeNotifier {
 
   GoogleSignInAccount? get currentUser => _currentUser;
 
-  AuthenticationProvider({FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignIn})
-      : _auth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn() {
+  AuthenticationService({
+    FirebaseAuth? firebaseAuth,
+    GoogleSignIn? googleSignIn,
+  }) : _auth = firebaseAuth ?? FirebaseAuth.instance,
+       _googleSignIn = googleSignIn ?? GoogleSignIn() {
     _loadCachedAvatar();
 
     _auth.authStateChanges().listen((User? user) {

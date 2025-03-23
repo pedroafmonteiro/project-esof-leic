@@ -1,6 +1,6 @@
-import 'package:eco_tracker/view/devices/devices_view.dart';
-import 'package:eco_tracker/view/home/home_view.dart';
-import 'package:eco_tracker/view/statistics/statistics_view.dart';
+import 'package:eco_tracker/views/devices/devices_view.dart';
+import 'package:eco_tracker/views/home/home_view.dart';
+import 'package:eco_tracker/views/statistics/statistics_view.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
@@ -17,6 +17,7 @@ class _NavigationViewState extends State<NavigationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentPageIndex,
         destinations: [

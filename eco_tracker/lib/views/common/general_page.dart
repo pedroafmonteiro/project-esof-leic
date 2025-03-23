@@ -1,4 +1,4 @@
-import 'package:eco_tracker/providers/authentication_provider.dart';
+import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,15 +14,20 @@ abstract class GeneralPage extends StatelessWidget {
   final bool hasFAB;
   final Icon? fabIcon;
 
+  void fabFunction(BuildContext context) {
+    return;
+  }
+
   Widget buildBody();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(title),
         actions: [
-          Consumer<AuthenticationProvider>(
+          Consumer<AuthenticationService>(
             builder: (context, provider, child) {
               return IconButton(
                 onPressed: null,
@@ -46,17 +51,21 @@ abstract class GeneralPage extends StatelessWidget {
             },
           ),
         ],
+        actionsPadding: EdgeInsets.only(right: 8.0),
       ),
       floatingActionButton:
           hasFAB
               ? FloatingActionButton(
-                onPressed: null,
+                onPressed: () => fabFunction(context),
                 backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
                 foregroundColor: Theme.of(context).colorScheme.onSurface,
                 child: fabIcon,
               )
               : null,
-      body: buildBody(),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: buildBody(),
+      ),
     );
   }
 }
