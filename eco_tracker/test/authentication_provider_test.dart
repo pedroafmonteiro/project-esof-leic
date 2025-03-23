@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:eco_tracker/providers/authentication_provider.dart';
+import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,7 +25,7 @@ class CustomMockGoogleSignIn extends MockGoogleSignIn {
 
 void main() {
   group('AuthenticationProvider Tests', () {
-    late AuthenticationProvider authProvider;
+    late AuthenticationService authProvider;
     late MockFirebaseAuth mockAuth;
     late CustomMockGoogleSignIn mockGoogleSignIn; 
     late MockUser mockUser;
@@ -43,7 +43,7 @@ void main() {
       mockAuth = MockFirebaseAuth(mockUser: mockUser); 
       mockGoogleSignIn = CustomMockGoogleSignIn(); 
 
-      authProvider = AuthenticationProvider(
+      authProvider = AuthenticationService(
         firebaseAuth: mockAuth,
         googleSignIn: mockGoogleSignIn,
       );
