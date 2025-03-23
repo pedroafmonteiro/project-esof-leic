@@ -24,8 +24,8 @@ class CustomMockGoogleSignIn extends MockGoogleSignIn {
 }
 
 void main() {
-  group('AuthenticationProvider Tests', () {
-    late AuthenticationService authProvider;
+  group('AuthenticationService Tests', () {
+    late AuthenticationService authService;
     late MockFirebaseAuth mockAuth;
     late CustomMockGoogleSignIn mockGoogleSignIn; 
     late MockUser mockUser;
@@ -43,7 +43,7 @@ void main() {
       mockAuth = MockFirebaseAuth(mockUser: mockUser); 
       mockGoogleSignIn = CustomMockGoogleSignIn(); 
 
-      authProvider = AuthenticationService(
+      authService = AuthenticationService(
         firebaseAuth: mockAuth,
         googleSignIn: mockGoogleSignIn,
       );
@@ -67,9 +67,9 @@ void main() {
     });
 
     test('signOut should clear currentUser and cached avatar', () async {
-      await authProvider.signOut();
+      await authService.signOut();
 
-      expect(authProvider.currentUser, isNull);
+      expect(authService.currentUser, isNull);
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getString('userAvatar'), isNull);
     });
@@ -78,7 +78,7 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userAvatar', 'https://example.com/avatar.png');
 
-      final avatar = await authProvider.getUserAvatar();
+      final avatar = await authService.getUserAvatar();
       expect(avatar, 'https://example.com/avatar.png');
     });
   });
