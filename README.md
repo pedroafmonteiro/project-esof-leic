@@ -61,6 +61,14 @@ To learn more about how to write a good product vision, please see:
 * [20 Inspiring Vision Statement Examples (2019 Updated), by lifehack.org](https://www.lifehack.org/articles/work/20-sample-vision-statement-for-the-new-startup.html)
 -->
 
+EcoTracker is an application that allows users to track the energy consumption of their appliances in real time while enabling companies to register their products with accurate consumption data. The platform provides greater transparency and control over energy usage, promoting efficiency and sustainability.
+
+Currently, many people lack a clear understanding of their appliances energy consumption, leading to waste and high costs. Our objective is to create an app that helps reduce energy waste and costs for users by developing a platform that is both helpful for the ordinary consumer and beneficial for manufacturers, "the Fitbit for home energy consumption—track, optimize, and save."
+
+
+The goal for our app is to revolutionize energy efficiency by providing our customers with a tool that lets them be aware of their energy consumption and waste, promoting sustainability and a greener future, while also facilitating the access and selling of appliances by allowing manufacturers to provide detailed information about their products. That is why our motto is "Empowering consumers and businesses for a more sustainable future."
+
+
 
 ### Features and Assumptions
 <!-- 
@@ -71,6 +79,8 @@ Indicate an  initial/tentative list of high-level features - high-level capabili
 
 Optionally, indicate an initial/tentative list of assumptions that you are doing about the app and dependencies of the app to other systems.
 -->
+
+
 
 ### Elevator Pitch
 <!-- 
