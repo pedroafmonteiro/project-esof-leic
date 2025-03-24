@@ -1,6 +1,5 @@
 import 'package:eco_tracker/models/device_model.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,14 +11,7 @@ class MockDatabaseReference extends Mock implements DatabaseReference {}
 class MockDatabaseEvent extends Mock implements DatabaseEvent {}
 class MockFirebaseApp extends Mock implements FirebaseApp {}
 class MockFirebaseAuth extends Mock with MockFirebaseAuthMixin {
-  User? _currentUser;
-
-  @override
-  User? get currentUser => _currentUser;
-
-  set currentUser(User? user) {
-    _currentUser = user;
-  }
+  User? currentUser;
 }
 
 mixin MockFirebaseAuthMixin {}
