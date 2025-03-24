@@ -75,14 +75,21 @@ Indicate an  initial/tentative list of high-level features - high-level capabili
 
 Optionally, indicate an initial/tentative list of assumptions that you are doing about the app and dependencies of the app to other systems.
 -->
-User Authentication –> Users can log in securely with their google accounts to mantain their preferences and data every time they enter the app.
-Add Devices -> The app allows users to add their own devices, that will be stored in a database, as well as their characteristics.
-Mantainer Mode -> If a user classifies as a mantainer in some company, he will get the ability to add the company's new devices or release versions. 
-Track Consumption -> The users will be allowed to introduce information about the time they used an equipment, the app automatically converts that time to energy usage.
-Tips -> The app provides a daily tip to help users to reduce their energy consumptions.
-Warnings -> The app warns the user of an eventual increase, regarding the general consumption or even of some particular device.
-Stats -> The user has the possibility to see all the statistics about their devices consumption throughout time.
-Compunption Resume -> The user will be given a resume of the monthly comsumptions.
+- User Authentication –> Users can log in securely with their google accounts to mantain their preferences and data every time they enter the app.
+
+- Add Devices -> The app allows users to add their own devices, that will be stored in a database, as well as their characteristics.
+
+- Mantainer Mode -> If a user classifies as a mantainer in some company, he will get the ability to add the company's new devices or release versions.
+
+- Track Consumption -> The users will be allowed to introduce information about the time they used an equipment, the app automatically converts that time to energy usage.
+
+- Tips -> The app provides a daily tip to help users to reduce their energy consumptions.
+
+- Warnings -> The app warns the user of an eventual increase, regarding the general consumption or even of some particular device.
+
+- Stats -> The user has the possibility to see all the statistics about their devices consumption throughout time.
+
+- Compunption Resume -> The user will be given a resume of the monthly comsumptions.
 
 
 ### Elevator Pitch
