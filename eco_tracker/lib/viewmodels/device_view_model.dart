@@ -5,21 +5,19 @@ import 'package:flutter/material.dart';
 
 class DeviceViewModel extends ChangeNotifier {
   final List<Device> _devices = [];
-  late DatabaseReference _databaseReference = FirebaseDatabase.instance.ref();
+  late DatabaseReference _databaseReference;
 
   List<Device> get devices => _devices;
 
-  DeviceViewModel() {
+  DeviceViewModel({DatabaseReference? databaseReference}) {
+    _databaseReference = databaseReference ?? FirebaseDatabase.instance.ref();
     _initialize();
   }
 
   Future<void> _initialize() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      _databaseReference = FirebaseDatabase.instance
-          .ref()
-          .child(user.uid)
-          .child('devices');
+      _databaseReference = _databaseReference.child(user.uid).child('devices');
       _loadDevices();
     }
   }
@@ -27,12 +25,8 @@ class DeviceViewModel extends ChangeNotifier {
   Future<void> addDevice(Device device) async {
     final newDeviceRef = _databaseReference.push();
     final deviceId = newDeviceRef.key!;
-
     final deviceWithId = device.copyWith(id: deviceId);
-
-    final deviceJson = deviceWithId.toJson();
-
-    await newDeviceRef.set(deviceJson);
+    await newDeviceRef.set(deviceWithId.toJson());
   }
 
   void _loadDevices() {
