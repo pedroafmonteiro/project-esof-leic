@@ -208,6 +208,15 @@ In this subsection please describe which feature, or part of it, you have implem
 
 At this phase, instead of a complete user story, you can simply implement a small part of a feature that demonstrates thay you can use the technology, for example, show a screen with the app credits (name and authors).
 -->
+- For our vertical prototype, we have implemented the adding of devices to the user's account. Meaning, each user can have their own set of custom devices, which will be important for the energy tracking features that we expect to deliver.
+- We also implemented an authentication mechanism using Firebase and Google Sign-In, so that users can access their info without losing any data.
+
+<p align="center">
+  <img width="350" src="images/vertical_prototype.gif" 
+  alt="Vertical prototype."/>
+</p>
+
+
 
 ## Project management
 <!--
@@ -232,6 +241,26 @@ You can find below information and references related with the project managemen
 -->
 
 ### Sprint 0
+
+Initial GitHub Project screenshot:
+
+<p align="center">
+  <img src="images/sprint0/initial.png" 
+  alt="Initial screenshot of sprint 0."/>
+</p>
+
+Final GitHub Project screenshot:
+
+<p align="center">
+  <img src="images/sprint0/final.png" 
+  alt="Final screenshot of sprint 0."/>
+</p>
+
+Product release - version 0.1.0.
+
+Restrospectives:
+- What did well: we achieved what we planned for this sprint, with all uml's done, populated our main README file and implemented the vertical prototype that we intended (Add a device).
+- What should we do differently: for the next sprint, we will need to better organize ourselves, and try to communicate more with other team members, as well as, making sure we are at the same rhythm.
 
 ### Sprint 1
 
