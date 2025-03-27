@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:eco_tracker/views/profile/profile_view.dart';
@@ -34,8 +35,7 @@ abstract class GeneralPage extends StatelessWidget {
               return IconButton(
                 onPressed: () {
                   final avatarUrl = provider.cachedAvatarUrl;
-                  Navigator.push(
-                    context,
+                  Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder:
                           (context, animation, secondaryAnimation) =>
@@ -46,8 +46,14 @@ abstract class GeneralPage extends StatelessWidget {
                         secondaryAnimation,
                         child,
                       ) {
-                        return FadeTransition(opacity: animation, child: child);
+                        return SharedAxisTransition(
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.horizontal,
+                          child: child,
+                        );
                       },
+                      transitionDuration: const Duration(milliseconds: 300),
                     ),
                   );
                 },
