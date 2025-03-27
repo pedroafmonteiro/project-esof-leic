@@ -137,7 +137,7 @@ class DevicesView extends GeneralPage {
   }
 
   @override
-  Widget buildBody() {
+  Widget buildBody(BuildContext context) {
     return Consumer<DeviceViewModel>(
       builder: (context, viewModel, child) {
         if (viewModel.devices.isNotEmpty) {
