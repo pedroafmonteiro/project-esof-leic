@@ -61,7 +61,7 @@ To learn more about how to write a good product vision, please see:
 * [20 Inspiring Vision Statement Examples (2019 Updated), by lifehack.org](https://www.lifehack.org/articles/work/20-sample-vision-statement-for-the-new-startup.html)
 -->
 
-EcoTracker is an application that allows users to track the energy consumption of their appliances while enabling companies to register their products with accurate consumption data. The platform provides greater transparency and control over energy usage, promoting efficiency and sustainability, "the Fitbit for home energy consumption—track, optimize, and save."
+EcoTracker is an application that allows users to track the energy consumption of their appliances while enabling companies to register their products with accurate consumption data. The platform provides greater transparency and control over energy usage, promoting efficiency and sustainability, "bringing clarity to your energy consumption for a greener future."
 
 The goal for our app is to revolutionize energy efficiency by providing our customers with a tool that lets them be aware of their energy consumption and waste, promoting sustainability and a greener future, while also facilitating the access and selling of appliances by allowing manufacturers to provide detailed information about their products. That is why our motto is "Empowering consumers and businesses for a more sustainable future."
 
