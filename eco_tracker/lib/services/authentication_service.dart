@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,8 @@ class AuthenticationService with ChangeNotifier {
 
   GoogleSignInAccount? get currentUser => _currentUser;
   String? get cachedAvatarUrl => _cachedAvatarUrl;
+  String? get displayName => _auth.currentUser?.displayName;
+  String? get email => _auth.currentUser?.email;
 
   AuthenticationService({
     FirebaseAuth? firebaseAuth,

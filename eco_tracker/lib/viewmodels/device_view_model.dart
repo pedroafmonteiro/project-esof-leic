@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eco_tracker/models/device_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -29,20 +31,19 @@ class DeviceViewModel extends ChangeNotifier {
     await newDeviceRef.set(deviceWithId.toJson());
   }
 
-  void _loadDevices() {
-    _databaseReference.onValue.listen((event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (data != null) {
-        _devices.clear();
-        data.forEach((key, value) {
-          final deviceData = Map<String, dynamic>.from(value);
-          if (deviceData['id'] == null) {
-            deviceData['id'] = key;
-          }
-          _devices.add(Device.fromJson(deviceData));
-        });
-        notifyListeners();
-      }
-    });
+  Future<void> _loadDevices() async {
+    final event = await _databaseReference.once();
+    final data = event.snapshot.value as Map<dynamic, dynamic>?;
+    if (data != null) {
+      _devices.clear();
+      data.forEach((key, value) {
+        final deviceData = Map<String, dynamic>.from(value);
+        if (deviceData['id'] == null) {
+          deviceData['id'] = key;
+        }
+        _devices.add(Device.fromJson(deviceData));
+      });
+      notifyListeners();
+    }
   }
 }
