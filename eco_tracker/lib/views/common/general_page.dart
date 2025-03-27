@@ -18,7 +18,7 @@ abstract class GeneralPage extends StatelessWidget {
     return;
   }
 
-  Widget buildBody();
+  Widget buildBody(BuildContext context);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ abstract class GeneralPage extends StatelessWidget {
               : null,
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-        child: buildBody(),
+        child: buildBody(context),
       ),
     );
   }

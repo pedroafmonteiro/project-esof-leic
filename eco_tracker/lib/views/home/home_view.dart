@@ -6,7 +6,7 @@ class HomeView extends GeneralPage {
     : super(title: 'Home', hasFAB: true, fabIcon: Icon(Icons.bolt));
 
   @override
-  Widget buildBody() {
+  Widget buildBody(BuildContext context) {
     return Center(child: Text('To be implemented.'));
   }
 }
