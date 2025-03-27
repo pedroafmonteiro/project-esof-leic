@@ -167,12 +167,6 @@ Records the energy consumption of devices, including the amount of energy used (
 **Report**
 Stores aggregated information about total energy consumption in a given period, including the date the report was generated.
 
-**Notification**
-Represents messages sent to users, containing details such as the message, priority and status (read or unread). Notifications can be triggered by high consumption events or other relevant alerts.
-
-**Location**
-Defines where devices are installed, and can represent physical locations such as "Kitchen", "Living Room" or even different buildings.
-
 **Maintainer**
 Represents companies responsible for adding information about devices, allowing users to choose models from a predefined database.
 
@@ -195,7 +189,7 @@ In this section you should start by briefly describing the components of the pro
   <img src="images/PackageDiagram.png" 
   alt=" The diagram represents the application architecture in layers, with the UI, the
         controller which processes requests and communicates with the service layer, 
-        for business logic (consumption calculation, reports, notifications).
+        for business logic (consumption calculation, reports).
         The model layer contains the main data structures, and the persistence layer
         manages the data using repositories. The external layer serves for
         external services, like emails and APIs.
@@ -208,8 +202,8 @@ In this section you should start by briefly describing the components of the pro
   <img src="images/DeploymentDiagram.png" 
   alt=" This diagram represents the physical architecture of the application, 
         highlighting the main components and their connections. 
-        It follows a client-server architecture, with interaction between the app, 
-        an application server, and a database. It also may include interactions with external databases.
+        It follows a client-server architecture, with interaction between the app and
+        an application server with its database. It also may include interactions with external databases.
         "/>
 </p>
 
