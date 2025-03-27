@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
+import 'package:eco_tracker/views/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,22 +32,40 @@ abstract class GeneralPage extends StatelessWidget {
           Consumer<AuthenticationService>(
             builder: (context, provider, child) {
               return IconButton(
-                onPressed: null,
-                icon: FutureBuilder<String?>(
-                  future: provider.getUserAvatar(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting ||
-                        snapshot.connectionState == ConnectionState.none) {
-                      return const Icon(Icons.account_circle_outlined);
-                    }
-                    if (snapshot.hasData && snapshot.data != null) {
-                      return CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: NetworkImage(snapshot.data!),
-                      );
-                    }
-                    return const Icon(Icons.account_circle_outlined);
-                  },
+                onPressed: () {
+                  final avatarUrl = provider.cachedAvatarUrl;
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder:
+                          (context, animation, secondaryAnimation) =>
+                              ProfileView(avatarUrl: avatarUrl),
+                      transitionsBuilder: (
+                        context,
+                        animation,
+                        secondaryAnimation,
+                        child,
+                      ) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                    ),
+                  );
+                },
+                icon: Hero(
+                  tag: "avatar",
+                  child: SizedBox(
+                    width: 40,
+                    height: 40,
+                    child:
+                        provider.cachedAvatarUrl != null
+                            ? CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: CachedNetworkImageProvider(
+                                provider.cachedAvatarUrl!,
+                              ),
+                            )
+                            : CircleAvatar(backgroundColor: Colors.transparent),
+                  ),
                 ),
               );
             },
