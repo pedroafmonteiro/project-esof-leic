@@ -39,7 +39,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthenticationService>(context, listen: false);
+    final authService = Provider.of<AuthenticationService>(
+      context,
+      listen: false,
+    );
 
     authService.getUserAvatar();
     return MaterialApp(
@@ -47,7 +50,7 @@ class MainApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
           seedColor: Colors.green,
         ),
       ),

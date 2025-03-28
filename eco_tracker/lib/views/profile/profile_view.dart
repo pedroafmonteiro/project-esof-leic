@@ -11,64 +11,170 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Column(
-          spacing: 8.0,
-          children: [
-            Hero(
-              tag: "avatar",
-              child: SizedBox(
-                width: 200,
-                height: 200,
-                child:
-                    avatarUrl != null
-                        ? CircleAvatar(
-                          radius: 100,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: CachedNetworkImageProvider(
-                            avatarUrl!,
-                          ),
-                        )
-                        : CircleAvatar(backgroundColor: Colors.transparent),
-              ),
-            ),
-            Consumer<AuthenticationService>(
-              builder: (context, provider, child) {
-                final displayName = provider.displayName ?? 'User';
-                return Text(
-                  displayName,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                );
-              },
-            ),
-            Consumer<AuthenticationService>(
-              builder: (context, provider, child) {
-                final email = provider.email ?? 'Unknown email';
-                return Text(
-                  email,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(forceMaterialTransparency: true),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8.0,
+            children: [
+              Center(
+                child: Hero(
+                  tag: "avatar",
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 20.0,
+                          spreadRadius: 0.0,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: SizedBox(
+                      width: 200,
+                      height: 200,
+                      child:
+                          avatarUrl != null
+                              ? CircleAvatar(
+                                radius: 100,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: CachedNetworkImageProvider(
+                                  avatarUrl!,
+                                ),
+                              )
+                              : CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                              ),
+                    ),
                   ),
-                );
-              },
-            ),
-            Consumer<AuthenticationService>(
-              builder: (context, provider, child) {
-                return ElevatedButton(
-                  onPressed: () {
-                    provider.signOut();
-                    Future.microtask(() {
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    });
+                ),
+              ),
+              Center(
+                child: Consumer<AuthenticationService>(
+                  builder: (context, provider, child) {
+                    final displayName = provider.displayName ?? 'User';
+                    return Text(
+                      displayName,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    );
                   },
-                  child: Text("Sign out"),
-                );
-              },
-            ),
-          ],
+                ),
+              ),
+              Center(
+                child: Consumer<AuthenticationService>(
+                  builder: (context, provider, child) {
+                    final email = provider.email ?? 'Unknown email';
+                    return Text(
+                      email,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                "Settings",
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Energy cost at your location",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              Text(
+                                "(€ per kWh)",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 60,
+                          child: TextField(
+                            controller: TextEditingController(text: "0.15"),
+                            keyboardType: TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                            ),
+                            onChanged: (value) {},
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Text(
+                          "Dark mode",
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        Spacer(),
+                        Switch(value: false, onChanged: (value) {}),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Center(
+                child: Consumer<AuthenticationService>(
+                  builder: (context, provider, child) {
+                    return TextButton(
+                      onPressed: () {
+                        provider.signOut();
+                        Future.microtask(() {
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        });
+                      },
+                      child: Text("Sign out"),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
