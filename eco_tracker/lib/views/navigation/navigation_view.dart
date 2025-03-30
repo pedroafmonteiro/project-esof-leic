@@ -1,4 +1,3 @@
-import 'package:eco_tracker/services/tips_service.dart';
 import 'package:eco_tracker/views/devices/devices_view.dart';
 import 'package:eco_tracker/views/home/home_view.dart';
 import 'package:eco_tracker/views/statistics/statistics_view.dart';
@@ -14,9 +13,6 @@ class NavigationView extends StatefulWidget {
 
 class _NavigationViewState extends State<NavigationView> {
   int currentPageIndex = 0;
-
-  // Define the tipsService variable
-  final tipsService = TipsService();
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +54,13 @@ class _NavigationViewState extends State<NavigationView> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return HomeView(key: ValueKey<int>(0), tipsService: tipsService);
+        return HomeView(key: ValueKey<int>(0));
       case 1:
         return StatisticsView(key: ValueKey<int>(1));
       case 2:
         return DevicesView(key: ValueKey<int>(2));
       default:
-        return HomeView(key: ValueKey<int>(0), tipsService: tipsService);
+        return HomeView(key: ValueKey<int>(0));
     }
   }
 }
