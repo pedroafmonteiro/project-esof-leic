@@ -93,6 +93,8 @@ Optionally, indicate an initial/tentative list of assumptions that you are doing
 
 
 ### Elevator Pitch
+
+Energy waste and high electricity costs are major problems for both consumers and manufacturers. Many people have no clear understanding of how much energy their appliances consume, leading to inefficiency and unnecessary expenses. This is where our app comes in handy. Our platform empowers users with insights into their energy consumption so they can optimize usage, save money, and protect the planet by reducing their footprint. On the other side, we have manufacturers—our app provides them the opportunity to showcase their products with accurate data, improving their relationships with clients and boosting their sales. With EcoTracker, we aim to reduce the gap between energy efficiency and sustainability, bringing clarity to energy consumption and paving the way for a greener future. 
 <!-- 
 Draft a small text to help you quickly introduce and describe your product in a short time (lift travel time ~90 seconds) and a few words (~800 characters), a technique usually known as elevator pitch.
 
