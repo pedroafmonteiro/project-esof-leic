@@ -20,8 +20,14 @@ class HomeView extends GeneralPage {
           return Card(
             color: Theme.of(context).colorScheme.tertiaryContainer,
             child: ListTile(
-              title: Text('Tip of the Day', style: Theme.of(context).textTheme.headlineSmall),
-              subtitle: Text(snapshot.data!, style: Theme.of(context).textTheme.labelLarge),
+              title: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text('Tip of the Day', style: Theme.of(context).textTheme.headlineSmall),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(snapshot.data!, style: Theme.of(context).textTheme.labelLarge, textAlign: TextAlign.center),
+              ),
             ),
           );
         } else {

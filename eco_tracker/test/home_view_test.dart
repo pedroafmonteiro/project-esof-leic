@@ -17,7 +17,7 @@ void main() {
   // Helper function to create the widget with mocked dependencies
   Widget createHomeViewUnderTest() {
     return MaterialApp(
-      home: HomeView(tipsService: mockTipsService),
+      home: HomeView(),
     );
   }
 
