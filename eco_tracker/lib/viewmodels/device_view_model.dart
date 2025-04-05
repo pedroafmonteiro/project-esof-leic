@@ -46,4 +46,19 @@ class DeviceViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+  Future<void> removeDevice(String deviceId) async {
+      await _databaseReference.child(deviceId).remove();
+      _devices.removeWhere((device) => device.id == deviceId);
+      notifyListeners();
+    }
+
+    Future<void> updateDevice(Device updatedDevice) async {
+      await _databaseReference.child(updatedDevice.id!).set(updatedDevice.toJson());
+
+      final index = _devices.indexWhere((device) => device.id == updatedDevice.id);
+      if (index != -1) {
+        _devices[index] = updatedDevice;
+        notifyListeners();
+      }
+    }
 }
