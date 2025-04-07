@@ -1,5 +1,6 @@
 import 'package:eco_tracker/firebase_options.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
+import 'package:eco_tracker/services/settings_service.dart';
 import 'package:eco_tracker/views/login/login_view.dart';
 import 'package:eco_tracker/views/navigation/navigation_view.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
@@ -18,6 +19,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthenticationService()),
+        ChangeNotifierProvider(create: (_) => SettingsService()),
         ChangeNotifierProvider(create: (_) => DeviceViewModel()),
       ],
       child: const MainApp(),
@@ -43,17 +45,24 @@ class MainApp extends StatelessWidget {
       context,
       listen: false,
     );
+    final settingsService = Provider.of<SettingsService>(context);
 
     authService.getUserAvatar();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.dark,
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: Colors.green,
         ),
       ),
+      darkTheme: ThemeData.from(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: Colors.green,
+        ),
+      ),
+      themeMode: settingsService.darkMode ? ThemeMode.dark : ThemeMode.light,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
