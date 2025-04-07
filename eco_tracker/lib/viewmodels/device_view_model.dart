@@ -21,7 +21,7 @@ class DeviceViewModel extends ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _databaseReference = _databaseReference.child(user.uid).child('devices');
-      _loadDevices();
+      loadDevices();
     }
   }
 
@@ -30,10 +30,10 @@ class DeviceViewModel extends ChangeNotifier {
     final deviceId = newDeviceRef.key!;
     final deviceWithId = device.copyWith(id: deviceId);
     await newDeviceRef.set(deviceWithId.toJson());
-    _loadDevices();
+    loadDevices();
   }
 
-  Future<void> _loadDevices() async {
+  Future<void> loadDevices() async {
     isLoading = true;
     notifyListeners();
 
@@ -59,7 +59,7 @@ class DeviceViewModel extends ChangeNotifier {
   Future<void> removeDevice(String deviceId) async {
     await _databaseReference.child(deviceId).remove();
     _devices.removeWhere((device) => device.id == deviceId);
-    _loadDevices();
+    loadDevices();
   }
 
   Future<void> updateDevice(Device updatedDevice) async {
@@ -73,6 +73,6 @@ class DeviceViewModel extends ChangeNotifier {
     if (index != -1) {
       _devices[index] = updatedDevice;
     }
-    _loadDevices();
+    loadDevices();
   }
 }

@@ -10,6 +10,11 @@ class DevicesView extends GeneralPage {
     : super(title: "Devices", hasFAB: true, fabIcon: Icon(Icons.add));
 
   @override
+  Future<void> onRefresh(BuildContext context) {
+    return Provider.of<DeviceViewModel>(context, listen: false).loadDevices();
+  }
+
+  @override
   void fabFunction(BuildContext context) {
     final modelController = TextEditingController();
     final manufacturerController = TextEditingController();
