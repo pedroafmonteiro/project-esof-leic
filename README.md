@@ -274,6 +274,26 @@ Restrospectives:
 
 ### Sprint 1
 
+Initial GitHub Project screenshot:
+
+<p align="center">
+  <img src="images/sprint1/initial.png" 
+  alt="Initial screenshot of sprint 1."/>
+</p>
+
+Final GitHub Project screenshot:
+
+<p align="center">
+  <img src="images/sprint1/final.png" 
+  alt="Final screenshot of sprint 1."/>
+</p>
+
+Product release - version 0.2.0
+
+Retrospectives:
+- What did well: we achieved what we planned for this sprint, with the option to add and remove devices, as well as a new tip of the day feature in the home screen and also a new profile page where the user can now sign out. We also did some things that were not planned as we had a little bit of extra time, such as, added a functional dark mode toggle and added an onRefresh function to the general page with the devices page working.
+- What should we do differently: better organize the project issues across team members and a better sprint planning, so some people have easy issues and others difficult ones.
+
 ### Sprint 2
 
 ### Sprint 3
