@@ -21,6 +21,10 @@ abstract class GeneralPage extends StatelessWidget {
     return;
   }
 
+  Future<void> onRefresh(BuildContext context) {
+    return Future.value();
+  }
+
   Widget buildBody(BuildContext context);
 
   @override
@@ -88,9 +92,14 @@ abstract class GeneralPage extends StatelessWidget {
                 child: fabIcon,
               )
               : null,
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-        child: buildBody(context),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          onRefresh(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: buildBody(context),
+        ),
       ),
     );
   }
