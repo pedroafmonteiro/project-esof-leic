@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class DeviceViewModel extends ChangeNotifier {
   final List<Device> _devices = [];
   late DatabaseReference _databaseReference;
+  bool isLoading = false;
 
   List<Device> get devices => _devices;
 
@@ -29,21 +30,49 @@ class DeviceViewModel extends ChangeNotifier {
     final deviceId = newDeviceRef.key!;
     final deviceWithId = device.copyWith(id: deviceId);
     await newDeviceRef.set(deviceWithId.toJson());
+    _loadDevices();
   }
 
   Future<void> _loadDevices() async {
-    final event = await _databaseReference.once();
-    final data = event.snapshot.value as Map<dynamic, dynamic>?;
-    if (data != null) {
-      _devices.clear();
-      data.forEach((key, value) {
-        final deviceData = Map<String, dynamic>.from(value);
-        if (deviceData['id'] == null) {
-          deviceData['id'] = key;
-        }
-        _devices.add(Device.fromJson(deviceData));
-      });
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      final event = await _databaseReference.once();
+      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+      if (data != null) {
+        _devices.clear();
+        data.forEach((key, value) {
+          final deviceData = Map<String, dynamic>.from(value);
+          if (deviceData['id'] == null) {
+            deviceData['id'] = key;
+          }
+          _devices.add(Device.fromJson(deviceData));
+        });
+      }
+    } finally {
+      isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> removeDevice(String deviceId) async {
+    await _databaseReference.child(deviceId).remove();
+    _devices.removeWhere((device) => device.id == deviceId);
+    _loadDevices();
+  }
+
+  Future<void> updateDevice(Device updatedDevice) async {
+    await _databaseReference
+        .child(updatedDevice.id!)
+        .set(updatedDevice.toJson());
+
+    final index = _devices.indexWhere(
+      (device) => device.id == updatedDevice.id,
+    );
+    if (index != -1) {
+      _devices[index] = updatedDevice;
+    }
+    _loadDevices();
   }
 }

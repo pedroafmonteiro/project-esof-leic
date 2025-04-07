@@ -12,7 +12,7 @@ class GeneralBottomSheet extends StatelessWidget {
         left: 16.0,
         right: 16.0,
         top: 16.0,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 8.0,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
       ),
       child: child,
     );
