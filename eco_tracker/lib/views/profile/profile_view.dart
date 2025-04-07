@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
+import 'package:eco_tracker/services/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,8 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsService = Provider.of<SettingsService>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(forceMaterialTransparency: true),
@@ -149,7 +152,12 @@ class ProfileView extends StatelessWidget {
                           ),
                         ),
                         Spacer(),
-                        Switch(value: false, onChanged: (value) {}),
+                        Switch(
+                          value: settingsService.darkMode,
+                          onChanged: (value) {
+                            settingsService.setDarkMode(value);
+                          },
+                        ),
                       ],
                     ),
                   ],
