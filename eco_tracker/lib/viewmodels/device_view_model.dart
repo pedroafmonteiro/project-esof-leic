@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class DeviceViewModel extends ChangeNotifier {
   final List<Device> _devices = [];
   late DatabaseReference _databaseReference;
+  bool isLoading = false;
 
   List<Device> get devices => _devices;
 
@@ -33,17 +34,24 @@ class DeviceViewModel extends ChangeNotifier {
   }
 
   Future<void> _loadDevices() async {
-    final event = await _databaseReference.once();
-    final data = event.snapshot.value as Map<dynamic, dynamic>?;
-    if (data != null) {
-      _devices.clear();
-      data.forEach((key, value) {
-        final deviceData = Map<String, dynamic>.from(value);
-        if (deviceData['id'] == null) {
-          deviceData['id'] = key;
-        }
-        _devices.add(Device.fromJson(deviceData));
-      });
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      final event = await _databaseReference.once();
+      final data = event.snapshot.value as Map<dynamic, dynamic>?;
+      if (data != null) {
+        _devices.clear();
+        data.forEach((key, value) {
+          final deviceData = Map<String, dynamic>.from(value);
+          if (deviceData['id'] == null) {
+            deviceData['id'] = key;
+          }
+          _devices.add(Device.fromJson(deviceData));
+        });
+      }
+    } finally {
+      isLoading = false;
       notifyListeners();
     }
   }
@@ -51,7 +59,7 @@ class DeviceViewModel extends ChangeNotifier {
   Future<void> removeDevice(String deviceId) async {
     await _databaseReference.child(deviceId).remove();
     _devices.removeWhere((device) => device.id == deviceId);
-    notifyListeners();
+    _loadDevices();
   }
 
   Future<void> updateDevice(Device updatedDevice) async {
@@ -64,7 +72,7 @@ class DeviceViewModel extends ChangeNotifier {
     );
     if (index != -1) {
       _devices[index] = updatedDevice;
-      notifyListeners();
     }
+    _loadDevices();
   }
 }

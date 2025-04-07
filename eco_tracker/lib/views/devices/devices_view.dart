@@ -238,7 +238,7 @@ class DevicesView extends GeneralPage {
                           Navigator.pop(context);
                         }
                       },
-                      child: Text('Save Changes'),
+                      child: Text('Save'),
                     ),
                   ),
                 ],
@@ -247,12 +247,15 @@ class DevicesView extends GeneralPage {
           ),
     );
   }
-
   @override
   Widget buildBody(BuildContext context) {
     return Consumer<DeviceViewModel>(
       builder: (context, viewModel, child) {
-        if (viewModel.devices.isNotEmpty) {
+        if (viewModel.isLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (viewModel.devices.isNotEmpty) {
           return ListView.builder(
             itemCount: viewModel.devices.length,
             itemBuilder: (context, index) {
