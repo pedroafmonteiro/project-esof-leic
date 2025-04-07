@@ -265,13 +265,13 @@ class DevicesView extends GeneralPage {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: Icon(Icons.edit_rounded),
                         onPressed: () {
                           _showEditDeviceSheet(context, device);
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: Icon(Icons.delete_rounded),
                         onPressed: () {
                           Provider.of<DeviceViewModel>(
                             context,
