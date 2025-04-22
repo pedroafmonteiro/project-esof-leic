@@ -294,6 +294,12 @@ Retrospectives:
 - What did well: we achieved what we planned for this sprint, with the option to add and remove devices, as well as a new tip of the day feature in the home screen and also a new profile page where the user can now sign out. We also did some things that were not planned as we had a little bit of extra time, such as, added a functional dark mode toggle and added an onRefresh function to the general page with the devices page working.
 - What should we do differently: better organize the project issues across team members and a better sprint planning, so some people have easy issues and others difficult ones.
 
+Happiness Meter:
+
+![](Users/35191/OneDrive - Universidade do Porto/Imagens/Capturas de Ecrã/Captura de ecrã 2025-04-22 115204.png)
+
+
+
 ### Sprint 2
 
 ### Sprint 3
