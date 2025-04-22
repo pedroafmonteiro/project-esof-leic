@@ -296,7 +296,10 @@ Retrospectives:
 
 Happiness Meter:
 
-![](Users/35191/OneDrive - Universidade do Porto/Imagens/Capturas de Ecrã/Captura de ecrã 2025-04-22 115204.png)
+<p align="center">
+  <img src="images/sprint1/happiness_meters.png" 
+  alt="Happiness meters of sprint 1."/>
+</p>
 
 
 
