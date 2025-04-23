@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class SettingsManager {
+  static bool? _darkMode;
+  
+  static bool get darkMode => _darkMode ?? false;
+  
+  static Future<void> preloadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    _darkMode = prefs.getBool(SettingsService._darkModeKey) ?? false;
+  }
+}
+
 class SettingsService extends ChangeNotifier {
   static const String _darkModeKey = 'darkMode';
 
@@ -9,6 +20,7 @@ class SettingsService extends ChangeNotifier {
   bool get darkMode => _darkMode;
 
   SettingsService() {
+    _darkMode = SettingsManager.darkMode;
     _loadSettings();
   }
 
