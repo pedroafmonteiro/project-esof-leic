@@ -1,4 +1,8 @@
 import 'package:eco_tracker/views/common/general_page.dart';
+import 'package:eco_tracker/views/statistics/widgets/daily_graph.dart';
+import 'package:eco_tracker/views/statistics/widgets/monthly_graph.dart';
+import 'package:eco_tracker/views/statistics/widgets/weekly_graph.dart';
+import 'package:eco_tracker/views/statistics/widgets/yearly_graph.dart';
 import 'package:flutter/material.dart';
 
 class StatisticsView extends StatefulWidget {
@@ -39,7 +43,7 @@ class StatisticsPage extends GeneralPage {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FilterChip(
               label: const Text("Daily"),
@@ -83,6 +87,15 @@ class StatisticsPage extends GeneralPage {
             ),
           ],
         ),
+        const SizedBox(height: 8),
+        if (selectedFilter == "Daily")
+          const DailyGraph()
+        else if (selectedFilter == "Weekly")
+          const WeeklyGraph()
+        else if (selectedFilter == "Monthly")
+          const MonthlyGraph()
+        else if (selectedFilter == "Yearly")
+          const YearlyGraph(),
       ],
     );
   }
