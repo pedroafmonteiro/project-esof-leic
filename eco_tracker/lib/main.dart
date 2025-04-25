@@ -52,13 +52,13 @@ class MainApp extends StatelessWidget {
     authService.getUserAvatar();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.from(
+      theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: Colors.green,
         ),
       ),
-      darkTheme: ThemeData.from(
+      darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
           seedColor: Colors.green,
