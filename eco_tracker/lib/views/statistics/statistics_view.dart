@@ -1,5 +1,5 @@
+import 'package:animations/animations.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
-import 'package:eco_tracker/views/statistics/widgets/daily_graph.dart';
 import 'package:eco_tracker/views/statistics/widgets/monthly_graph.dart';
 import 'package:eco_tracker/views/statistics/widgets/weekly_graph.dart';
 import 'package:eco_tracker/views/statistics/widgets/yearly_graph.dart';
@@ -13,15 +13,15 @@ class StatisticsView extends StatefulWidget {
 }
 
 class _StatisticsViewState extends State<StatisticsView> {
-  String selectedFilter = "Daily";
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return StatisticsPage(
-      selectedFilter: selectedFilter,
-      onFilterChanged: (filter) {
+      selectedIndex: _selectedIndex,
+      onFilterChanged: (index) {
         setState(() {
-          selectedFilter = filter;
+          _selectedIndex = index;
         });
       },
     );
@@ -29,12 +29,12 @@ class _StatisticsViewState extends State<StatisticsView> {
 }
 
 class StatisticsPage extends GeneralPage {
-  final String selectedFilter;
-  final void Function(String) onFilterChanged;
+  final int selectedIndex;
+  final void Function(int) onFilterChanged;
 
   const StatisticsPage({
     super.key,
-    required this.selectedFilter,
+    required this.selectedIndex,
     required this.onFilterChanged,
   }) : super(title: "Statistics", hasFAB: false);
 
@@ -47,56 +47,114 @@ class StatisticsPage extends GeneralPage {
           children: [
             FilterChip(
               label: const Text("Daily"),
-              selected: selectedFilter == "Daily",
+              selected: selectedIndex == 0,
               showCheckmark: false,
               onSelected: (value) {
                 if (value) {
-                  onFilterChanged("Daily");
+                  onFilterChanged(0);
                 }
               },
             ),
             FilterChip(
               label: const Text("Weekly"),
-              selected: selectedFilter == "Weekly",
+              selected: selectedIndex == 1,
               showCheckmark: false,
               onSelected: (value) {
                 if (value) {
-                  onFilterChanged("Weekly");
+                  onFilterChanged(1);
                 }
               },
             ),
             FilterChip(
               label: const Text("Monthly"),
-              selected: selectedFilter == "Monthly",
+              selected: selectedIndex == 2,
               showCheckmark: false,
               onSelected: (value) {
                 if (value) {
-                  onFilterChanged("Monthly");
+                  onFilterChanged(2);
                 }
               },
             ),
             FilterChip(
               label: const Text("Yearly"),
-              selected: selectedFilter == "Yearly",
+              selected: selectedIndex == 3,
               showCheckmark: false,
               onSelected: (value) {
                 if (value) {
-                  onFilterChanged("Yearly");
+                  onFilterChanged(3);
                 }
               },
             ),
           ],
         ),
         const SizedBox(height: 8),
-        if (selectedFilter == "Daily")
-          const DailyGraph()
-        else if (selectedFilter == "Weekly")
-          const WeeklyGraph()
-        else if (selectedFilter == "Monthly")
-          const MonthlyGraph()
-        else if (selectedFilter == "Yearly")
-          const YearlyGraph(),
+        Expanded(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: PageTransitionSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder:
+                  (child, animation, secondaryAnimation) =>
+                      SharedAxisTransition(
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        transitionType: SharedAxisTransitionType.horizontal,
+                        child: child,
+                      ),
+              child: _getPageForIndex(selectedIndex),
+            ),
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _getPageForIndex(int index) {
+    switch (index) {
+      case 0:
+        return _buildDailyPage();
+      case 1:
+        return _buildWeeklyPage();
+      case 2:
+        return _buildMonthlyPage();
+      case 3:
+        return _buildYearlyPage();
+      default:
+        return _buildDailyPage();
+    }
+  }
+
+  Widget _buildDailyPage() {
+    return Container(
+      alignment: Alignment.center,
+      key: ValueKey<int>(0),
+      width: double.infinity,
+      height: 350,
+      child: Text('Coming soon'),
+    );
+  }
+
+  Widget _buildWeeklyPage() {
+    return SizedBox(
+      key: ValueKey<int>(1),
+      width: double.infinity,
+      child: WeeklyGraph(),
+    );
+  }
+
+  Widget _buildMonthlyPage() {
+    return SizedBox(
+      key: ValueKey<int>(2),
+      width: double.infinity,
+      child: MonthlyGraph(),
+    );
+  }
+
+  Widget _buildYearlyPage() {
+    return SizedBox(
+      key: ValueKey<int>(3),
+      width: double.infinity,
+      child: YearlyGraph(),
     );
   }
 }
