@@ -10,7 +10,8 @@ class TipsService {
 
   Future<String> getTodaysTip() async {
     List<String> tips = await loadTips();
-    int index = DateTime.now().difference(DateTime(1970, 1, 1)).inDays % tips.length;
+    int index =
+        DateTime.now().difference(DateTime(1970, 1, 1)).inDays % tips.length;
     return tips[index];
   }
 }

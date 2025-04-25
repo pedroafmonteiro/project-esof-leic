@@ -92,13 +92,13 @@ class StatisticsPage extends GeneralPage {
         Expanded(
           child: PageTransitionSwitcher(
             duration: const Duration(milliseconds: 300),
-            transitionBuilder:
-                (child, animation, secondaryAnimation) => SharedAxisTransition(
-                  animation: animation,
-                  secondaryAnimation: secondaryAnimation,
-                  transitionType: SharedAxisTransitionType.horizontal,
-                  child: child,
-                ),
+            transitionBuilder: (child, animation, secondaryAnimation) =>
+                SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.horizontal,
+              child: child,
+            ),
             child: _getPageForIndex(selectedIndex, context),
           ),
         ),
@@ -145,9 +145,7 @@ class StatisticsPage extends GeneralPage {
           title: 'Estimated Usage',
           extension: 'kWh',
         ),
-
         SizedBox(height: 8.0),
-
         StatisticsCard(
           data: dailyUsage * costPerKwh,
           title: 'Estimated Cost',

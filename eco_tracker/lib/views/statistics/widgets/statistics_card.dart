@@ -25,9 +25,9 @@ class StatisticsCard extends StatelessWidget {
             Text(
               '${data.toStringAsFixed(2)} $extension',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
           ],
         ),

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class DevicesView extends GeneralPage {
   DevicesView({super.key})
-    : super(title: "Devices", hasFAB: true, fabIcon: Icon(Icons.add));
+      : super(title: "Devices", hasFAB: true, fabIcon: Icon(Icons.add));
 
   @override
   Future<void> onRefresh(BuildContext context) {
@@ -25,119 +25,118 @@ class DevicesView extends GeneralPage {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:
-          (context) => GeneralBottomSheet(
-            child: Form(
-              key: formKey,
-              child: Wrap(
-                runSpacing: 8.0,
+      builder: (context) => GeneralBottomSheet(
+        child: Form(
+          key: formKey,
+          child: Wrap(
+            runSpacing: 8.0,
+            children: [
+              Text(
+                'Add device',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              TextFormField(
+                controller: modelController,
+                decoration: InputDecoration(
+                  hintText: 'Model',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Field cannot be empty.';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: manufacturerController,
+                decoration: InputDecoration(
+                  hintText: 'Manufacturer',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Field cannot be empty.';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: categoryController,
+                decoration: InputDecoration(
+                  hintText: 'Category',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Field cannot be empty.';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: powerConsumptionController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Power consumption (Wattage)',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Field cannot be empty.';
+                  }
+                  return null;
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Add device',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  TextFormField(
-                    controller: modelController,
-                    decoration: InputDecoration(
-                      hintText: 'Model',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Field cannot be empty.';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: manufacturerController,
-                    decoration: InputDecoration(
-                      hintText: 'Manufacturer',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Field cannot be empty.';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: categoryController,
-                    decoration: InputDecoration(
-                      hintText: 'Category',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Field cannot be empty.';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: powerConsumptionController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Power consumption (Wattage)',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Field cannot be empty.';
-                      }
-                      return null;
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          padding: WidgetStateProperty.all(
-                            EdgeInsets.only(left: 0.0),
-                          ),
-                          backgroundColor: WidgetStateProperty.all(
-                            Colors.transparent,
-                          ),
-                        ),
-                        child: Text('Select from list'),
+                  ElevatedButton(
+                    onPressed: null,
+                    style: ButtonStyle(
+                      padding: WidgetStateProperty.all(
+                        EdgeInsets.only(left: 0.0),
                       ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            Theme.of(context).colorScheme.primary,
-                          ),
-                          foregroundColor: WidgetStateProperty.all(
-                            Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ),
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            final device = Device(
-                              model: modelController.text,
-                              manufacturer: manufacturerController.text,
-                              category: categoryController.text,
-                              powerConsumption: int.parse(
-                                powerConsumptionController.text,
-                              ),
-                            );
-                            Provider.of<DeviceViewModel>(
-                              context,
-                              listen: false,
-                            ).addDevice(device);
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: Text('Save'),
+                      backgroundColor: WidgetStateProperty.all(
+                        Colors.transparent,
                       ),
-                    ],
+                    ),
+                    child: Text('Select from list'),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        Theme.of(context).colorScheme.primary,
+                      ),
+                      foregroundColor: WidgetStateProperty.all(
+                        Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        final device = Device(
+                          model: modelController.text,
+                          manufacturer: manufacturerController.text,
+                          category: categoryController.text,
+                          powerConsumption: int.parse(
+                            powerConsumptionController.text,
+                          ),
+                        );
+                        Provider.of<DeviceViewModel>(
+                          context,
+                          listen: false,
+                        ).addDevice(device);
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text('Save'),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
+        ),
+      ),
     );
   }
 
@@ -155,101 +154,92 @@ class DevicesView extends GeneralPage {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:
-          (context) => GeneralBottomSheet(
-            child: Form(
-              key: formKey,
-              child: Wrap(
-                runSpacing: 8.0,
-                children: [
-                  Text(
-                    'Edit device',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  TextFormField(
-                    controller: modelController,
-                    decoration: InputDecoration(
-                      hintText: 'Model',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Field cannot be empty.'
-                                : null,
-                  ),
-                  TextFormField(
-                    controller: manufacturerController,
-                    decoration: InputDecoration(
-                      hintText: 'Manufacturer',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Field cannot be empty.'
-                                : null,
-                  ),
-                  TextFormField(
-                    controller: categoryController,
-                    decoration: InputDecoration(
-                      hintText: 'Category',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Field cannot be empty.'
-                                : null,
-                  ),
-                  TextFormField(
-                    controller: powerConsumptionController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: 'Power consumption (Wattage)',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Field cannot be empty.'
-                                : null,
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(
-                          Theme.of(context).colorScheme.primary,
-                        ),
-                        foregroundColor: WidgetStateProperty.all(
-                          Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          final updatedDevice = device.copyWith(
-                            model: modelController.text,
-                            manufacturer: manufacturerController.text,
-                            category: categoryController.text,
-                            powerConsumption: int.parse(
-                              powerConsumptionController.text,
-                            ),
-                          );
-                          Provider.of<DeviceViewModel>(
-                            context,
-                            listen: false,
-                          ).updateDevice(updatedDevice);
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Text('Save'),
-                    ),
-                  ),
-                ],
+      builder: (context) => GeneralBottomSheet(
+        child: Form(
+          key: formKey,
+          child: Wrap(
+            runSpacing: 8.0,
+            children: [
+              Text(
+                'Edit device',
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
-            ),
+              TextFormField(
+                controller: modelController,
+                decoration: InputDecoration(
+                  hintText: 'Model',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
+              ),
+              TextFormField(
+                controller: manufacturerController,
+                decoration: InputDecoration(
+                  hintText: 'Manufacturer',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
+              ),
+              TextFormField(
+                controller: categoryController,
+                decoration: InputDecoration(
+                  hintText: 'Category',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
+              ),
+              TextFormField(
+                controller: powerConsumptionController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Power consumption (Wattage)',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.primary,
+                    ),
+                    foregroundColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  ),
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      final updatedDevice = device.copyWith(
+                        model: modelController.text,
+                        manufacturer: manufacturerController.text,
+                        category: categoryController.text,
+                        powerConsumption: int.parse(
+                          powerConsumptionController.text,
+                        ),
+                      );
+                      Provider.of<DeviceViewModel>(
+                        context,
+                        listen: false,
+                      ).updateDevice(updatedDevice);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text('Save'),
+                ),
+              ),
+            ],
           ),
+        ),
+      ),
     );
   }
 

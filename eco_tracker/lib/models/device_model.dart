@@ -45,8 +45,8 @@ class Device {
       model: json['model'],
       manufacturer: json['manufacturer'],
       category: json['category'],
-      powerConsumption: json['powerConsumption'] is num 
-          ? (json['powerConsumption'] as num).toInt() 
+      powerConsumption: json['powerConsumption'] is num
+          ? (json['powerConsumption'] as num).toInt()
           : 0,
     );
   }

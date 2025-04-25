@@ -57,9 +57,9 @@ class MonthlyGraph extends StatelessWidget {
           child: Text(
             day,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 12,
-            ),
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 12,
+                ),
           ),
         );
       },

@@ -20,8 +20,8 @@ class AuthenticationService with ChangeNotifier {
   AuthenticationService({
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
-  }) : _auth = firebaseAuth ?? FirebaseAuth.instance,
-       _googleSignIn = googleSignIn ?? GoogleSignIn() {
+  })  : _auth = firebaseAuth ?? FirebaseAuth.instance,
+        _googleSignIn = googleSignIn ?? GoogleSignIn() {
     _loadCachedAvatar();
 
     _auth.authStateChanges().listen((User? user) {

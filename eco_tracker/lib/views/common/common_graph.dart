@@ -23,9 +23,8 @@ class CommonGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     double maxY = 10.0;
     if (spots.isNotEmpty) {
-      double highestY = spots
-          .map((spot) => spot.y)
-          .reduce((a, b) => a > b ? a : b);
+      double highestY =
+          spots.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
       maxY = highestY * 1.1;
     }
 
@@ -74,12 +73,11 @@ class CommonGraph extends StatelessWidget {
                     return LineTooltipItem(
                       '$y $tooltipSuffix',
                       Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(
+                                color: Theme.of(
                                   context,
                                 ).colorScheme.onPrimaryContainer,
-                            fontSize: 12,
-                          ) ??
+                                fontSize: 12,
+                              ) ??
                           const TextStyle(),
                     );
                   }).toList();
