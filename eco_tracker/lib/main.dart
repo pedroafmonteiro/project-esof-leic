@@ -1,6 +1,7 @@
 import 'package:eco_tracker/firebase_options.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:eco_tracker/services/settings_service.dart';
+import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/login/login_view.dart';
 import 'package:eco_tracker/views/navigation/navigation_view.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
@@ -20,9 +21,18 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthenticationService()),
-        ChangeNotifierProvider(create: (_) => SettingsService()),
-        ChangeNotifierProvider(create: (_) => DeviceViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => AuthenticationService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SettingsService(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DeviceViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => StatisticsViewModel(),
+        ),
       ],
       child: const MainApp(),
     ),

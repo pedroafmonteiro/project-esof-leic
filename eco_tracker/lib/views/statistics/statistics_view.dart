@@ -21,16 +21,13 @@ class _StatisticsViewState extends State<StatisticsView> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => StatisticsViewModel(),
-      child: StatisticsPage(
-        selectedIndex: _selectedIndex,
-        onFilterChanged: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-      ),
+    return StatisticsPage(
+      selectedIndex: _selectedIndex,
+      onFilterChanged: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
     );
   }
 }
@@ -267,7 +264,9 @@ class StatisticsPage extends GeneralPage {
   }
 
   Future<void> _selectDate(
-      BuildContext context, StatisticsViewModel viewModel,) async {
+    BuildContext context,
+    StatisticsViewModel viewModel,
+  ) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: viewModel.selectedDate,
