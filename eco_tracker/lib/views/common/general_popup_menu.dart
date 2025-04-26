@@ -21,17 +21,36 @@ class DevicePopupMenu {
   static Future<DeviceItem?> show({
     required BuildContext context,
     required Offset position,
+    PopupMenuItemSelected<DeviceItem>? onSelected,
   }) async {
     final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     
-    return await showMenu<DeviceItem>(
+    final result = await showMenu<DeviceItem>(
       context: context,
-      position: RelativeRect.fromRect(
-        Rect.fromPoints(position, position),
-        Rect.fromPoints(Offset.zero, overlay.size.bottomRight(Offset.zero)),
+      position: RelativeRect.fromLTRB(
+        (overlay.size.width / 2) - 100, // Center horizontally (half screen width minus half menu width)
+        (overlay.size.height / 2) - 100, // Center vertically (half screen height minus approximate half menu height)
+        (overlay.size.width / 2) + 100, // Right position (matching left offset)
+        (overlay.size.height / 2) + 100, // Bottom position (matching top offset)
+      ),
+      elevation: 8.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      color: Theme.of(context).colorScheme.surface,
+      constraints: BoxConstraints(
+        minWidth: 200.0,
+        maxWidth: 280.0,
       ),
       items: await _buildMenuItems(context),
     );
+    
+    // Call the callback if a device was selected
+    if (result != null && onSelected != null) {
+      onSelected(result);
+    }
+    
+    return result;
   }
   
   static Future<List<PopupMenuEntry<DeviceItem>>> _buildMenuItems(BuildContext context) async {
@@ -48,7 +67,7 @@ class DevicePopupMenu {
             ),
           ),
         )
-        ];
+      ];
       
       // Make sure user is authenticated
       final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -69,13 +88,20 @@ class DevicePopupMenu {
       if (deviceViewModel.devices.isNotEmpty) {
         menuItems = deviceViewModel.devices.map((device) {
           return PopupMenuItem<DeviceItem>(
+            height: 50,
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             value: DeviceItem(
               id: device.id ?? '',
               name: device.model,
-              manufacturer: device.manufacturer,
-              category: device.category,
             ),
-            child: Text(device.model), // Just display the device name
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                device.model,
+                style: TextStyle(),
+              ),
+            ), 
           );
         }).toList();
       } else {
@@ -90,8 +116,8 @@ class DevicePopupMenu {
                 const Text('No devices available'),
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Close the menu
-                    Navigator.pushNamed(context, '/devices'); // Navigate to devices page
+                    Navigator.pop(context); 
+                    Navigator.pushNamed(context, '/devices');
                   },
                   child: const Text('Add a device'),
                 ),

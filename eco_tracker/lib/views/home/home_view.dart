@@ -45,7 +45,6 @@ class HomeView extends GeneralPage {
     final formKey = GlobalKey<FormState>();
     
     // Variable to store the selected device
-    DeviceItem? selectedDevice;
 
     showModalBottomSheet(
       context: context,
@@ -75,12 +74,9 @@ class HomeView extends GeneralPage {
                       
                       // Handle the selected device
                       if (result != null) {
-                        selectedDevice = result;
                         // Update UI to show selected device
-                        // This requires making the container a StatefulBuilder or using setState
-                        // For simplicity, we'll just show a snackbar for now
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Selected device: ${result.name}')),
+                          SnackBar(backgroundColor: Theme.of(context).colorScheme.onSurface, content: Text('Selected device: ${result.name}')),
                         );
                       }
                     },
