@@ -91,7 +91,7 @@ class CommonGraph extends StatelessWidget {
             lineBarsData: [
               LineChartBarData(
                 spots: spots,
-                isCurved: true,
+                isCurved: false,
                 color: Theme.of(context).colorScheme.primary,
                 barWidth: 3,
                 isStrokeCapRound: true,
