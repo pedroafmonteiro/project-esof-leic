@@ -1,5 +1,6 @@
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
+import 'package:eco_tracker/views/common/general_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:eco_tracker/services/tips_service.dart';
 
@@ -42,6 +43,9 @@ class HomeView extends GeneralPage {
     final hoursController = TextEditingController();
     final minutesController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    
+    // Variable to store the selected device
+    DeviceItem? selectedDevice;
 
     showModalBottomSheet(
       context: context,
@@ -58,13 +62,35 @@ class HomeView extends GeneralPage {
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
+                    onTap: () async {
+                      // Get the position for popup menu
+                      final RenderBox button = context.findRenderObject() as RenderBox;
+                      final Offset position = button.localToGlobal(Offset.zero);
+                      
+                      // Show popup menu and get result
+                      final DeviceItem? result = await DevicePopupMenu.show(
+                        context: context,
+                        position: position,
+                      );
+                      
+                      // Handle the selected device
+                      if (result != null) {
+                        selectedDevice = result;
+                        // Update UI to show selected device
+                        // This requires making the container a StatefulBuilder or using setState
+                        // For simplicity, we'll just show a snackbar for now
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Selected device: ${result.name}')),
+                        );
+                      }
                     },
                     child: Container(
-                      padding:  EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(20)),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest, 
+                        borderRadius: BorderRadius.circular(20)
+                      ),
                       child: Text('Choose device', style: Theme.of(context).textTheme.titleLarge),
                     ),      
                   ),
