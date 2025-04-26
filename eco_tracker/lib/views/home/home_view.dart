@@ -38,6 +38,7 @@ class HomeView extends GeneralPage {
       },
     );
   }
+
   @override
   void fabFunction(BuildContext context) {
     final hoursController = TextEditingController();
@@ -45,112 +46,146 @@ class HomeView extends GeneralPage {
     final formKey = GlobalKey<FormState>();
     
     // Variable to store the selected device
+    DeviceItem? selectedDevice;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:
-          (context) => GeneralBottomSheet(
-            child: Form(
-              key: formKey,
-              child: Wrap(
-                runSpacing: 8.0,
-                children: [
-                  Text(
-                    'Log Usage',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      // Get the position for popup menu
-                      final RenderBox button = context.findRenderObject() as RenderBox;
-                      final Offset position = button.localToGlobal(Offset.zero);
-                      
-                      // Show popup menu and get result
-                      final DeviceItem? result = await DevicePopupMenu.show(
-                        context: context,
-                        position: position,
-                      );
-                      
-                      // Handle the selected device
-                      if (result != null) {
-                        // Update UI to show selected device
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(backgroundColor: Theme.of(context).colorScheme.onSurface, content: Text('Selected device: ${result.name}')),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return GeneralBottomSheet(
+              child: Form(
+                key: formKey,
+                child: Wrap(
+                  runSpacing: 8.0,
+                  children: [
+                    Text(
+                      selectedDevice != null ? selectedDevice!.name : 'Log Usage',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        // Get the position for popup menu
+                        final RenderBox button = context.findRenderObject() as RenderBox;
+                        final Offset position = button.localToGlobal(Offset.zero);
+                        
+                        // Show popup menu and get result
+                        final DeviceItem? result = await DevicePopupMenu.show(
+                          context: context,
+                          position: position,
+                          onSelected: (device) {
+                            setState(() {
+                              selectedDevice = device;
+                            });
+                          },
                         );
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceContainerHighest, 
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      child: Text('Choose device', style: Theme.of(context).textTheme.titleLarge),
-                    ),      
-                  ),
-                  Row(  
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: hoursController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            hintText: 'Hours',
-                            border: OutlineInputBorder(),
+                        
+                        // If the callback wasn't used, update state here
+                        if (result != null && selectedDevice?.id != result.id) {
+                          setState(() {
+                            selectedDevice = result;
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest, 
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Text(
+                          selectedDevice != null ? 'Change device' : 'Choose device', 
+                          style: Theme.of(context).textTheme.titleLarge
+                        ),
+                      ),      
+                    ),
+                    Row(  
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: hoursController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              hintText: 'Hours',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Field cannot be empty.';
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Field cannot be empty.';
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: minutesController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              hintText: 'Minutes',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Field cannot be empty.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                              selectedDevice != null 
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.surfaceVariant,
+                            ),
+                            foregroundColor: WidgetStateProperty.all(
+                              selectedDevice != null
+                                ? Theme.of(context).colorScheme.onPrimary
+                                : Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          onPressed: selectedDevice != null ? () {
+                            if (formKey.currentState!.validate()) {
+                              // Get hours and minutes
+                              final hours = int.tryParse(hoursController.text) ?? 0;
+                              final minutes = int.tryParse(minutesController.text) ?? 0;
+                              
+                              // Record usage (implement your logic to save this data)
+                              print('Recording usage for ${selectedDevice!.name}: $hours hours and $minutes minutes');
+                              
+                              // Show confirmation
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Logged ${hours}h ${minutes}m for ${selectedDevice!.name}'),
+                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                                ),
+                              );
+                              
+                              Navigator.pop(context); // Close the bottom sheet
                             }
-                            return null;
-                          },
+                          } : null,
+                          child: Text('Save'),
                         ),
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: TextFormField(
-                          controller: minutesController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            hintText: 'Minutes',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Field cannot be empty.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            Theme.of(context).colorScheme.primary,
-                          ),
-                          foregroundColor: WidgetStateProperty.all(
-                            Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ),
-                        onPressed: () {
-                          null;
-                        },
-                        child: Text('Save'),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          }
+        );
+      },
     );
   }
 }
