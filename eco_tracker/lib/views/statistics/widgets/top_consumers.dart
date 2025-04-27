@@ -22,43 +22,42 @@ class TopConsumers extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: sortedDevices.length,
-              itemBuilder: (context, index) {
-                final entry = sortedDevices[index];
-                return Card(
-                  child: ListTile(
-                    title: FutureBuilder<String>(
-                      future: _getDeviceName(entry.key),
-                      builder: (context, snapshot) {
-                        return Text(snapshot.data ?? 'Device ${index + 1}');
-                      },
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: sortedDevices.length,
+            itemBuilder: (context, index) {
+              final entry = sortedDevices[index];
+              return Card(
+                child: ListTile(
+                  title: FutureBuilder<String>(
+                    future: _getDeviceName(entry.key),
+                    builder: (context, snapshot) {
+                      return Text(snapshot.data ?? 'Device ${index + 1}');
+                    },
+                  ),
+                  subtitle: Text('${entry.value.toStringAsFixed(2)} kWh'),
+                  trailing: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      shape: BoxShape.circle,
                     ),
-                    subtitle: Text('${entry.value.toStringAsFixed(2)} kWh'),
-                    trailing: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '#${index + 1}',
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    child: Center(
+                      child: Text(
+                        '#${index + 1}',
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ],
       ),

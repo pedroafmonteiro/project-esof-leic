@@ -2,6 +2,7 @@ import 'package:eco_tracker/models/graph_data_model.dart';
 import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/statistics/widgets/graphs/monthly_graph.dart';
 import 'package:eco_tracker/views/statistics/widgets/statistics_card.dart';
+import 'package:eco_tracker/views/statistics/widgets/top_consumers.dart'; // Import for TopConsumers widget
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -40,33 +41,55 @@ class MonthlyView extends StatelessWidget {
       viewModel.selectedMonthYear,
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: Column(
-        spacing: 8.0,
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: () => _selectMonth(context, viewModel),
-              child: Text(
-                '$monthName ${viewModel.selectedMonthYear}',
-                style: Theme.of(context).textTheme.titleSmall,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          child: Column(
+            spacing: 8.0,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: () => _selectMonth(context, viewModel),
+                  child: Text(
+                    '$monthName ${viewModel.selectedMonthYear}',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
               ),
-            ),
+              StatisticsCard(
+                data: chartData.totalConsumption,
+                title: 'Monthly Usage',
+                extension: 'kWh',
+              ),
+              StatisticsCard(
+                data: chartData.totalCost,
+                title: 'Monthly Cost',
+                extension: '€',
+              ),
+              if (monthlyUsage.deviceConsumption.isNotEmpty) ...[
+                MonthlyGraph(chartData: chartData),
+                TopConsumers(
+                  deviceConsumption: monthlyUsage.deviceConsumption,
+                ),
+              ],
+              if (monthlyUsage.deviceConsumption.isEmpty)
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.4,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'No device usage data recorded for this month.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
-          StatisticsCard(
-            data: chartData.totalConsumption,
-            title: 'Monthly Usage',
-            extension: 'kWh',
-          ),
-          StatisticsCard(
-            data: chartData.totalCost,
-            title: 'Monthly Cost',
-            extension: '€',
-          ),
-          MonthlyGraph(chartData: chartData),
-        ],
+        ),
       ),
     );
   }

@@ -12,48 +12,46 @@ class YearlyGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final spots = _createFlSpots(chartData);
 
-    return Expanded(
-      child: CommonGraph(
-        spots: spots,
-        minX: 1,
-        maxX: 12,
-        interval: 1,
-        getTitlesWidget: (value, meta) {
-          final month = value.toInt();
-          if (month < 1 || month > 12) return const SizedBox.shrink();
+    return CommonGraph(
+      spots: spots,
+      minX: 1,
+      maxX: 12,
+      interval: 3,
+      getTitlesWidget: (value, meta) {
+        final month = value.toInt();
+        if (month < 1 || month > 12) return const SizedBox.shrink();
 
-          final months = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ];
-          String label = months[month - 1];
+        final months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ];
+        String label = months[month - 1];
 
-          return SideTitleWidget(
-            meta: meta,
-            fitInside: SideTitleFitInsideData.fromTitleMeta(
-              meta,
-              distanceFromEdge: 0,
-            ),
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 12,
-                  ),
-            ),
-          );
-        },
-      ),
+        return SideTitleWidget(
+          meta: meta,
+          fitInside: SideTitleFitInsideData.fromTitleMeta(
+            meta,
+            distanceFromEdge: 0,
+          ),
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 12,
+                ),
+          ),
+        );
+      },
     );
   }
 

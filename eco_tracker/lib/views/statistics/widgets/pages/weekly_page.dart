@@ -2,6 +2,7 @@ import 'package:eco_tracker/models/graph_data_model.dart';
 import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/statistics/widgets/graphs/weekly_graph.dart';
 import 'package:eco_tracker/views/statistics/widgets/statistics_card.dart';
+import 'package:eco_tracker/views/statistics/widgets/top_consumers.dart'; // Import for TopConsumers widget
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,33 +34,55 @@ class WeeklyView extends StatelessWidget {
     final chartData =
         WeeklyChartData.fromWeeklySummary(weeklyUsage.dailyConsumption);
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: Column(
-        spacing: 8.0,
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: () => _selectWeek(context, viewModel),
-              child: Text(
-                'Week ${viewModel.selectedWeekNumber}, ${viewModel.selectedWeekYear}',
-                style: Theme.of(context).textTheme.titleSmall,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          child: Column(
+            spacing: 8.0,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: () => _selectWeek(context, viewModel),
+                  child: Text(
+                    'Week ${viewModel.selectedWeekNumber}, ${viewModel.selectedWeekYear}',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
               ),
-            ),
+              StatisticsCard(
+                data: chartData.totalConsumption,
+                title: 'Weekly Usage',
+                extension: 'kWh',
+              ),
+              StatisticsCard(
+                data: chartData.totalCost,
+                title: 'Weekly Cost',
+                extension: '€',
+              ),
+              if (weeklyUsage.deviceConsumption.isNotEmpty) ...[
+                WeeklyGraph(chartData: chartData),
+                TopConsumers(
+                  deviceConsumption: weeklyUsage.deviceConsumption,
+                ),
+              ],
+              if (weeklyUsage.deviceConsumption.isEmpty)
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.4,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'No device usage data recorded for this week.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
-          StatisticsCard(
-            data: chartData.totalConsumption,
-            title: 'Weekly Usage',
-            extension: 'kWh',
-          ),
-          StatisticsCard(
-            data: chartData.totalCost,
-            title: 'Weekly Cost',
-            extension: '€',
-          ),
-          WeeklyGraph(chartData: chartData),
-        ],
+        ),
       ),
     );
   }

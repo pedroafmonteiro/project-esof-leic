@@ -120,6 +120,8 @@ class UsageService {
 
     double totalKwh = 0.0;
     Map<int, double> dailyConsumption = {};
+    Map<String, double> deviceConsumption =
+        {};
 
     for (int i = 1; i <= 7; i++) {
       dailyConsumption[i] = 0.0;
@@ -135,6 +137,9 @@ class UsageService {
       final dayOfWeek = usageDate.weekday;
 
       dailyConsumption[dayOfWeek] = (dailyConsumption[dayOfWeek] ?? 0.0) + kWh;
+
+      deviceConsumption[deviceId] = (deviceConsumption[deviceId] ?? 0.0) + kWh;
+
       totalKwh += kWh;
     }
 
@@ -144,6 +149,7 @@ class UsageService {
       totalKwh: totalKwh,
       totalCost: totalKwh * costPerKwh,
       dailyConsumption: dailyConsumption,
+      deviceConsumption: deviceConsumption,
     );
   }
 
@@ -156,6 +162,8 @@ class UsageService {
 
     double totalKwh = 0.0;
     Map<int, double> dailyConsumption = {};
+    Map<String, double> deviceConsumption =
+        {};
 
     for (int i = 1; i <= endDate.day; i++) {
       dailyConsumption[i] = 0.0;
@@ -172,6 +180,9 @@ class UsageService {
 
       dailyConsumption[dayOfMonth] =
           (dailyConsumption[dayOfMonth] ?? 0.0) + kWh;
+
+      deviceConsumption[deviceId] = (deviceConsumption[deviceId] ?? 0.0) + kWh;
+
       totalKwh += kWh;
     }
 
@@ -181,6 +192,7 @@ class UsageService {
       totalKwh: totalKwh,
       totalCost: totalKwh * costPerKwh,
       dailyConsumption: dailyConsumption,
+      deviceConsumption: deviceConsumption,
     );
   }
 
@@ -193,6 +205,8 @@ class UsageService {
 
     double totalKwh = 0.0;
     Map<int, double> monthlyConsumption = {};
+    Map<String, double> deviceConsumption =
+        {};
 
     for (int i = 1; i <= 12; i++) {
       monthlyConsumption[i] = 0.0;
@@ -208,6 +222,9 @@ class UsageService {
       final month = usageDate.month;
 
       monthlyConsumption[month] = (monthlyConsumption[month] ?? 0.0) + kWh;
+
+      deviceConsumption[deviceId] = (deviceConsumption[deviceId] ?? 0.0) + kWh;
+
       totalKwh += kWh;
     }
 
@@ -216,6 +233,7 @@ class UsageService {
       totalKwh: totalKwh,
       totalCost: totalKwh * costPerKwh,
       monthlyConsumption: monthlyConsumption,
+      deviceConsumption: deviceConsumption,
     );
   }
 }

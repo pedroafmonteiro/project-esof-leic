@@ -29,47 +29,53 @@ class DailyView extends StatelessWidget {
     final double usageKwh = dailyUsage?.totalKwh ?? 0;
     final double costEuros = dailyUsage?.totalCost ?? 0;
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: Column(
-        spacing: 8.0,
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: () => _selectDate(context, viewModel),
-              child: Text(
-                DateFormat('MMM dd, yyyy').format(viewModel.selectedDate),
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-          ),
-          StatisticsCard(
-            data: usageKwh,
-            title: 'Estimated Usage',
-            extension: 'kWh',
-          ),
-          StatisticsCard(
-            data: costEuros,
-            title: 'Estimated Cost',
-            extension: '€',
-          ),
-          if (dailyUsage != null && dailyUsage.deviceConsumption.isNotEmpty)
-            Expanded(
-              child: TopConsumers(
-                deviceConsumption: dailyUsage.deviceConsumption,
-              ),
-            ),
-          if (dailyUsage == null || dailyUsage.deviceConsumption.isEmpty)
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'No usage data recorded for this day.\nTry selecting another date or log device usage.',
-                  textAlign: TextAlign.center,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          child: Column(
+            spacing: 8.0,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: () => _selectDate(context, viewModel),
+                  child: Text(
+                    DateFormat('MMM dd, yyyy').format(viewModel.selectedDate),
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
                 ),
               ),
-            ),
-        ],
+              StatisticsCard(
+                data: usageKwh,
+                title: 'Daily Usage',
+                extension: 'kWh',
+              ),
+              StatisticsCard(
+                data: costEuros,
+                title: 'Daily Cost',
+                extension: '€',
+              ),
+              if (dailyUsage != null && dailyUsage.deviceConsumption.isNotEmpty)
+                TopConsumers(
+                  deviceConsumption: dailyUsage.deviceConsumption,
+                ),
+              if (dailyUsage == null || dailyUsage.deviceConsumption.isEmpty)
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.4,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'No device usage data recorded for this day.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
