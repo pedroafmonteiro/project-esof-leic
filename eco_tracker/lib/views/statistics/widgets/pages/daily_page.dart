@@ -1,5 +1,6 @@
 import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/statistics/widgets/statistics_card.dart';
+import 'package:eco_tracker/views/statistics/widgets/top_consumers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,9 +21,7 @@ class DailyView extends StatelessWidget {
       return Center(
         child: Text(
           'Error loading data: ${viewModel.dailyError}',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.error,
-              ),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
     }
@@ -30,50 +29,48 @@ class DailyView extends StatelessWidget {
     final double usageKwh = dailyUsage?.totalKwh ?? 0;
     final double costEuros = dailyUsage?.totalCost ?? 0;
 
-    return Column(
-      key: const ValueKey<int>(0),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                DateFormat('MMM dd, yyyy').format(viewModel.selectedDate),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              IconButton(
-                icon: const Icon(Icons.calendar_today),
-                onPressed: () => _selectDate(context, viewModel),
-              ),
-            ],
-          ),
-        ),
-        StatisticsCard(
-          data: usageKwh,
-          title: 'Estimated Usage',
-          extension: 'kWh',
-        ),
-        const SizedBox(height: 8.0),
-        StatisticsCard(
-          data: costEuros,
-          title: 'Estimated Cost',
-          extension: '€',
-        ),
-        /* if (dailyUsage != null && dailyUsage.deviceConsumption.isNotEmpty)
-          Expanded(
-            child: _buildTopConsumers(context, dailyUsage.deviceConsumption),
-          ), */
-        if (dailyUsage == null || dailyUsage.deviceConsumption.isEmpty)
-          const Expanded(
-            child: Center(
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Column(
+        spacing: 8.0,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: () => _selectDate(context, viewModel),
               child: Text(
-                'No usage data recorded for this day.\nTry selecting another date or log device usage.',
-                textAlign: TextAlign.center,
+                DateFormat('MMM dd, yyyy').format(viewModel.selectedDate),
+                style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
           ),
-      ],
+          StatisticsCard(
+            data: usageKwh,
+            title: 'Estimated Usage',
+            extension: 'kWh',
+          ),
+          StatisticsCard(
+            data: costEuros,
+            title: 'Estimated Cost',
+            extension: '€',
+          ),
+          if (dailyUsage != null && dailyUsage.deviceConsumption.isNotEmpty)
+            Expanded(
+              child: TopConsumers(
+                deviceConsumption: dailyUsage.deviceConsumption,
+              ),
+            ),
+          if (dailyUsage == null || dailyUsage.deviceConsumption.isEmpty)
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'No usage data recorded for this day.\nTry selecting another date or log device usage.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

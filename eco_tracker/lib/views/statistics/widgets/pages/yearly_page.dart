@@ -34,38 +34,34 @@ class YearlyView extends StatelessWidget {
 
     final chartData =
         YearlyChartData.fromYearlySummary(yearlyUsage.monthlyConsumption);
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Column(
+        spacing: 8.0,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: () => _selectYear(context, viewModel),
+              child: Text(
                 'Year ${viewModel.selectedYear}',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleSmall,
               ),
-              IconButton(
-                icon: const Icon(Icons.calendar_month),
-                onPressed: () => _selectYear(context, viewModel),
-              ),
-            ],
+            ),
           ),
-        ),
-        StatisticsCard(
-          data: chartData.totalConsumption,
-          title: 'Yearly Usage',
-          extension: 'kWh',
-        ),
-        const SizedBox(height: 8),
-        StatisticsCard(
-          data: chartData.totalCost,
-          title: 'Yearly Cost',
-          extension: '€',
-        ),
-        const SizedBox(height: 8),
-        YearlyGraph(chartData: chartData),
-      ],
+          StatisticsCard(
+            data: chartData.totalConsumption,
+            title: 'Yearly Usage',
+            extension: 'kWh',
+          ),
+          StatisticsCard(
+            data: chartData.totalCost,
+            title: 'Yearly Cost',
+            extension: '€',
+          ),
+          YearlyGraph(chartData: chartData),
+        ],
+      ),
     );
   }
 
@@ -85,22 +81,22 @@ class YearlyView extends StatelessWidget {
             Text(currentYear.toString()),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
                     viewModel.changeSelectedYear(currentYear - 1);
+                    Navigator.of(context).pop();
                   },
-                  child: const Text('Previous Year'),
+                  child: const Text('Previous'),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
                     viewModel.changeSelectedYear(currentYear + 1);
+                    Navigator.of(context).pop();
                   },
-                  child: const Text('Next Year'),
+                  child: const Text('Next'),
                 ),
               ],
             ),

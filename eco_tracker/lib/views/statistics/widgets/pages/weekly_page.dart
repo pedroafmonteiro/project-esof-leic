@@ -21,9 +21,7 @@ class WeeklyView extends StatelessWidget {
       return Center(
         child: Text(
           'Error loading data: ${viewModel.weeklyError}',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.error,
-              ),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
     }
@@ -35,38 +33,34 @@ class WeeklyView extends StatelessWidget {
     final chartData =
         WeeklyChartData.fromWeeklySummary(weeklyUsage.dailyConsumption);
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Column(
+        spacing: 8.0,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: () => _selectWeek(context, viewModel),
+              child: Text(
                 'Week ${viewModel.selectedWeekNumber}, ${viewModel.selectedWeekYear}',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleSmall,
               ),
-              IconButton(
-                icon: const Icon(Icons.calendar_month),
-                onPressed: () => _selectWeek(context, viewModel),
-              ),
-            ],
+            ),
           ),
-        ),
-        StatisticsCard(
-          data: chartData.totalConsumption,
-          title: 'Weekly Usage',
-          extension: 'kWh',
-        ),
-        const SizedBox(height: 8),
-        StatisticsCard(
-          data: chartData.totalCost,
-          title: 'Weekly Cost',
-          extension: '€',
-        ),
-        const SizedBox(height: 8),
-        WeeklyGraph(chartData: chartData),
-      ],
+          StatisticsCard(
+            data: chartData.totalConsumption,
+            title: 'Weekly Usage',
+            extension: 'kWh',
+          ),
+          StatisticsCard(
+            data: chartData.totalCost,
+            title: 'Weekly Cost',
+            extension: '€',
+          ),
+          WeeklyGraph(chartData: chartData),
+        ],
+      ),
     );
   }
 
@@ -87,12 +81,10 @@ class WeeklyView extends StatelessWidget {
             Text('Week $currentWeek, $currentYear'),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-
                     int newWeek = currentWeek - 1;
                     int newYear = currentYear;
 
@@ -102,14 +94,12 @@ class WeeklyView extends StatelessWidget {
                     }
 
                     viewModel.changeSelectedWeek(newWeek, newYear);
+                    Navigator.of(context).pop();
                   },
-                  child: const Text('Previous Week'),
+                  child: const Text('Previous'),
                 ),
-                const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-
                     int newWeek = currentWeek + 1;
                     int newYear = currentYear;
 
@@ -119,8 +109,9 @@ class WeeklyView extends StatelessWidget {
                     }
 
                     viewModel.changeSelectedWeek(newWeek, newYear);
+                    Navigator.of(context).pop();
                   },
-                  child: const Text('Next Week'),
+                  child: const Text('Next'),
                 ),
               ],
             ),

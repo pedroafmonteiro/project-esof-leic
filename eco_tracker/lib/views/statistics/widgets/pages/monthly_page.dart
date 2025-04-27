@@ -22,9 +22,7 @@ class MonthlyView extends StatelessWidget {
       return Center(
         child: Text(
           'Error loading data: ${viewModel.monthlyError}',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.error,
-              ),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
     }
@@ -42,38 +40,34 @@ class MonthlyView extends StatelessWidget {
       viewModel.selectedMonthYear,
     );
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Column(
+        spacing: 8.0,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: () => _selectMonth(context, viewModel),
+              child: Text(
                 '$monthName ${viewModel.selectedMonthYear}',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleSmall,
               ),
-              IconButton(
-                icon: const Icon(Icons.calendar_month),
-                onPressed: () => _selectMonth(context, viewModel),
-              ),
-            ],
+            ),
           ),
-        ),
-        StatisticsCard(
-          data: chartData.totalConsumption,
-          title: 'Monthly Usage',
-          extension: 'kWh',
-        ),
-        const SizedBox(height: 8),
-        StatisticsCard(
-          data: chartData.totalCost,
-          title: 'Monthly Cost',
-          extension: '€',
-        ),
-        const SizedBox(height: 8),
-        MonthlyGraph(chartData: chartData),
-      ],
+          StatisticsCard(
+            data: chartData.totalConsumption,
+            title: 'Monthly Usage',
+            extension: 'kWh',
+          ),
+          StatisticsCard(
+            data: chartData.totalCost,
+            title: 'Monthly Cost',
+            extension: '€',
+          ),
+          MonthlyGraph(chartData: chartData),
+        ],
+      ),
     );
   }
 
@@ -109,12 +103,10 @@ class MonthlyView extends StatelessWidget {
             Text('${monthNames[currentMonth - 1]} $currentYear'),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-
                     int newMonth = currentMonth - 1;
                     int newYear = currentYear;
 
@@ -124,14 +116,13 @@ class MonthlyView extends StatelessWidget {
                     }
 
                     viewModel.changeSelectedMonth(newMonth, newYear);
+                    Navigator.of(context).pop();
                   },
-                  child: const Text('Previous Month'),
+                  child: const Text('Previous'),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-
                     int newMonth = currentMonth + 1;
                     int newYear = currentYear;
 
@@ -141,8 +132,9 @@ class MonthlyView extends StatelessWidget {
                     }
 
                     viewModel.changeSelectedMonth(newMonth, newYear);
+                    Navigator.of(context).pop();
                   },
-                  child: const Text('Next Month'),
+                  child: const Text('Next'),
                 ),
               ],
             ),

@@ -88,7 +88,6 @@ class StatisticsPage extends GeneralPage {
             ),
           ],
         ),
-        const SizedBox(height: 8),
         Expanded(
           child: PageTransitionSwitcher(
             duration: const Duration(milliseconds: 300),
