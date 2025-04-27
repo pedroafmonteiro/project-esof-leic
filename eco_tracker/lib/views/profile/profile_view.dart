@@ -84,7 +84,8 @@ class ProfileView extends StatelessWidget {
               SizedBox(height: 16.0),
               Text(
                 "Settings",
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -94,7 +95,7 @@ class ProfileView extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Row(
+                    /* Row(
                       children: [
                         Expanded(
                           child: Column(
@@ -141,7 +142,7 @@ class ProfileView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: 16.0), */
                     Row(
                       children: [
                         Text(
@@ -163,7 +164,7 @@ class ProfileView extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 8.0),
               Center(
                 child: Consumer<AuthenticationService>(
                   builder: (context, provider, child) {

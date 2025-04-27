@@ -252,14 +252,13 @@ class DevicesView extends GeneralPage {
           ),
     );
   }
+
   @override
   Widget buildBody(BuildContext context) {
     return Consumer<DeviceViewModel>(
       builder: (context, viewModel, child) {
         if (viewModel.isLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Center(child: CircularProgressIndicator());
         } else if (viewModel.devices.isNotEmpty) {
           return ListView.builder(
             itemCount: viewModel.devices.length,
@@ -294,7 +293,18 @@ class DevicesView extends GeneralPage {
             },
           );
         }
-        return Center(child: Text("You haven't added any devices."));
+        return CustomScrollView(
+          slivers: <Widget>[
+            SliverFillRemaining(
+              child: Container(
+                color: Colors.transparent,
+                child: Center(
+                  child: Text("You haven't added any devices yet."),
+                ),
+              ),
+            ),
+          ],
+        );
       },
     );
   }
