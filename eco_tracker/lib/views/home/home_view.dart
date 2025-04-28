@@ -1,8 +1,10 @@
 import 'package:eco_tracker/models/device_model.dart';
+import 'package:eco_tracker/viewmodels/device_view_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
-import 'package:eco_tracker/views/common/general_popup_menu.dart';
+import 'package:eco_tracker/views/home/widgets/device_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:eco_tracker/services/tips_service.dart';
 
 class HomeView extends GeneralPage {
@@ -75,22 +77,21 @@ class HomeView extends GeneralPage {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        final RenderBox button =
-                            context.findRenderObject() as RenderBox;
-                        final Offset position =
-                            button.localToGlobal(Offset.zero);
+                        final deviceViewModel = Provider.of<DeviceViewModel>(
+                          context,
+                          listen: false,
+                        );
+                        await deviceViewModel
+                            .loadDevices();
 
-                        final Device? result = await DevicePopupMenu.show(
+                        final Device? result =
+                            await DevicePicker.showDeviceDialog(
                           context: context,
-                          position: position,
-                          onSelected: (device) {
-                            setState(() {
-                              selectedDevice = device;
-                            });
-                          },
+                          devices: deviceViewModel.devices,
+                          selectedDevice: selectedDevice,
                         );
 
-                        if (result != null && selectedDevice?.id != result.id) {
+                        if (result != null) {
                           setState(() {
                             selectedDevice = result;
                           });
