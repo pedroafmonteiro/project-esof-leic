@@ -52,8 +52,7 @@ class HomeView extends GeneralPage {
     final hoursController = TextEditingController();
     final minutesController = TextEditingController();
     final formKey = GlobalKey<FormState>();
-    
-    // Variable to store the selected device
+
     DeviceItem? selectedDevice;
 
     showModalBottomSheet(
@@ -69,16 +68,18 @@ class HomeView extends GeneralPage {
                   runSpacing: 8.0,
                   children: [
                     Text(
-                      selectedDevice != null ? selectedDevice!.name : 'Log Usage',
+                      selectedDevice != null
+                          ? selectedDevice!.name
+                          : 'Log Usage',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     GestureDetector(
                       onTap: () async {
-                        // Get the position for popup menu
-                        final RenderBox button = context.findRenderObject() as RenderBox;
-                        final Offset position = button.localToGlobal(Offset.zero);
-                        
-                        // Show popup menu and get result
+                        final RenderBox button =
+                            context.findRenderObject() as RenderBox;
+                        final Offset position =
+                            button.localToGlobal(Offset.zero);
+
                         final DeviceItem? result = await DevicePopupMenu.show(
                           context: context,
                           position: position,
@@ -88,8 +89,7 @@ class HomeView extends GeneralPage {
                             });
                           },
                         );
-                        
-                        // If the callback wasn't used, update state here
+
                         if (result != null && selectedDevice?.id != result.id) {
                           setState(() {
                             selectedDevice = result;
@@ -100,16 +100,20 @@ class HomeView extends GeneralPage {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest, 
-                          borderRadius: BorderRadius.circular(20)
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          selectedDevice != null ? 'Change device' : 'Choose device', 
-                          style: Theme.of(context).textTheme.titleLarge
+                          selectedDevice != null
+                              ? 'Change device'
+                              : 'Choose device',
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
-                      ),      
+                      ),
                     ),
-                    Row(  
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
@@ -153,36 +157,48 @@ class HomeView extends GeneralPage {
                         ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all(
-                              selectedDevice != null 
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.surfaceVariant,
+                              selectedDevice != null
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest,
                             ),
                             foregroundColor: WidgetStateProperty.all(
                               selectedDevice != null
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.onSurfaceVariant,
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                             ),
                           ),
-                          onPressed: selectedDevice != null ? () {
-                            if (formKey.currentState!.validate()) {
-                              // Get hours and minutes
-                              final hours = int.tryParse(hoursController.text) ?? 0;
-                              final minutes = int.tryParse(minutesController.text) ?? 0;
-                              
-                              // Record usage (implement your logic to save this data)
-                              print('Recording usage for ${selectedDevice!.name}: $hours hours and $minutes minutes');
-                              
-                              // Show confirmation
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Logged ${hours}h ${minutes}m for ${selectedDevice!.name}'),
-                                  backgroundColor: Theme.of(context).colorScheme.primary,
-                                ),
-                              );
-                              
-                              Navigator.pop(context); // Close the bottom sheet
-                            }
-                          } : null,
+                          onPressed: selectedDevice != null
+                              ? () {
+                                  if (formKey.currentState!.validate()) {
+                                    final hours =
+                                        int.tryParse(hoursController.text) ?? 0;
+                                    final minutes =
+                                        int.tryParse(minutesController.text) ??
+                                            0;
+
+                                    print(
+                                      'Recording usage for ${selectedDevice!.name}: $hours hours and $minutes minutes',
+                                    );
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Logged ${hours}h ${minutes}m for ${selectedDevice!.name}',
+                                        ),
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    );
+
+                                    Navigator.pop(context);
+                                  }
+                                }
+                              : null,
                           child: Text('Save'),
                         ),
                       ],
@@ -191,7 +207,7 @@ class HomeView extends GeneralPage {
                 ),
               ),
             );
-          }
+          },
         );
       },
     );
