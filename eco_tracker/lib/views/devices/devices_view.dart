@@ -13,7 +13,7 @@ class DevicesView extends GeneralPage {
       : super(title: "Devices", hasFAB: true, fabIcon: Icon(Icons.add));
 
   @override
-  Future<void> onRefresh(BuildContext context) {
+  Future<void> onRefresh(BuildContext context) async {
     return Provider.of<DeviceViewModel>(context, listen: false).loadDevices();
   }
 
