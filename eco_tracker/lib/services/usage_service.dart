@@ -120,8 +120,7 @@ class UsageService {
 
     double totalKwh = 0.0;
     Map<int, double> dailyConsumption = {};
-    Map<String, double> deviceConsumption =
-        {};
+    Map<String, double> deviceConsumption = {};
 
     for (int i = 1; i <= 7; i++) {
       dailyConsumption[i] = 0.0;
@@ -162,8 +161,7 @@ class UsageService {
 
     double totalKwh = 0.0;
     Map<int, double> dailyConsumption = {};
-    Map<String, double> deviceConsumption =
-        {};
+    Map<String, double> deviceConsumption = {};
 
     for (int i = 1; i <= endDate.day; i++) {
       dailyConsumption[i] = 0.0;
@@ -205,8 +203,7 @@ class UsageService {
 
     double totalKwh = 0.0;
     Map<int, double> monthlyConsumption = {};
-    Map<String, double> deviceConsumption =
-        {};
+    Map<String, double> deviceConsumption = {};
 
     for (int i = 1; i <= 12; i++) {
       monthlyConsumption[i] = 0.0;
@@ -235,5 +232,32 @@ class UsageService {
       monthlyConsumption: monthlyConsumption,
       deviceConsumption: deviceConsumption,
     );
+  }
+
+  Future<bool> logDeviceUsage({
+    required String deviceId,
+    required int durationSeconds,
+    DateTime? date,
+  }) async {
+    if (userId == null) {
+      return false;
+    }
+
+    final dateToUse = date ?? DateTime.now();
+    final dateFormat = DateFormat('yyyy-MM-dd');
+    final dateString = dateFormat.format(dateToUse);
+
+    final usagePath = '/$userId/usage/$dateString/$deviceId';
+    final usageRef = _database.ref(usagePath);
+
+    try {
+      await usageRef.set({
+        'durationSeconds': durationSeconds,
+      });
+      return true;
+    } catch (e) {
+      print('Error logging device usage: $e');
+      return false;
+    }
   }
 }

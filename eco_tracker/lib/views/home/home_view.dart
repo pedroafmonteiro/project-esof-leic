@@ -3,6 +3,7 @@ import 'package:eco_tracker/viewmodels/device_view_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/home/widgets/device_picker.dart';
+import 'package:eco_tracker/services/usage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eco_tracker/services/tips_service.dart';
@@ -11,6 +12,7 @@ class HomeView extends GeneralPage {
   HomeView({super.key})
       : super(title: 'Home', hasFAB: true, fabIcon: Icon(Icons.bolt));
   final TipsService tipsService = TipsService();
+  final UsageService _usageService = UsageService();
 
   @override
   Widget buildBody(BuildContext context) {
@@ -81,8 +83,7 @@ class HomeView extends GeneralPage {
                           context,
                           listen: false,
                         );
-                        await deviceViewModel
-                            .loadDevices();
+                        await deviceViewModel.loadDevices();
 
                         final Device? result =
                             await DevicePicker.showDeviceDialog(
@@ -173,7 +174,7 @@ class HomeView extends GeneralPage {
                             ),
                           ),
                           onPressed: selectedDevice != null
-                              ? () {
+                              ? () async {
                                   if (formKey.currentState!.validate()) {
                                     final hours =
                                         int.tryParse(hoursController.text) ?? 0;
@@ -181,14 +182,28 @@ class HomeView extends GeneralPage {
                                         int.tryParse(minutesController.text) ??
                                             0;
 
+                                    final durationSeconds =
+                                        (hours * 3600) + (minutes * 60);
+
+                                    final success = selectedDevice!.id != null
+                                        ? await _usageService.logDeviceUsage(
+                                            deviceId: selectedDevice!.id!,
+                                            durationSeconds: durationSeconds,
+                                          )
+                                        : false;
+
+                                    final message = success
+                                        ? 'Logged ${hours}h ${minutes}m for ${selectedDevice!.manufacturer} ${selectedDevice!.model}'
+                                        : 'Failed to log usage. Please try again.';
+
+                                    final backgroundColor = success
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.error;
+
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                          'Logged ${hours}h ${minutes}m for ${selectedDevice!.manufacturer} ${selectedDevice!.model}',
-                                        ),
-                                        backgroundColor: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                        content: Text(message),
+                                        backgroundColor: backgroundColor,
                                       ),
                                     );
 
