@@ -1,3 +1,4 @@
+import 'package:eco_tracker/models/device_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/common/general_popup_menu.dart';
@@ -53,7 +54,7 @@ class HomeView extends GeneralPage {
     final minutesController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    DeviceItem? selectedDevice;
+    Device? selectedDevice;
 
     showModalBottomSheet(
       context: context,
@@ -69,7 +70,7 @@ class HomeView extends GeneralPage {
                   children: [
                     Text(
                       selectedDevice != null
-                          ? selectedDevice!.name
+                          ? '${selectedDevice!.manufacturer} ${selectedDevice!.model}'
                           : 'Log Usage',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
@@ -80,7 +81,7 @@ class HomeView extends GeneralPage {
                         final Offset position =
                             button.localToGlobal(Offset.zero);
 
-                        final DeviceItem? result = await DevicePopupMenu.show(
+                        final Device? result = await DevicePopupMenu.show(
                           context: context,
                           position: position,
                           onSelected: (device) {
@@ -181,13 +182,13 @@ class HomeView extends GeneralPage {
                                             0;
 
                                     print(
-                                      'Recording usage for ${selectedDevice!.name}: $hours hours and $minutes minutes',
+                                      'Recording usage for ${selectedDevice!.manufacturer} ${selectedDevice!.model}: $hours hours and $minutes minutes',
                                     );
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'Logged ${hours}h ${minutes}m for ${selectedDevice!.name}',
+                                          'Logged ${hours}h ${minutes}m for ${selectedDevice!.manufacturer} ${selectedDevice!.model}',
                                         ),
                                         backgroundColor: Theme.of(context)
                                             .colorScheme
