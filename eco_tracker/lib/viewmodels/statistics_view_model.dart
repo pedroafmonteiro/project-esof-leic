@@ -57,10 +57,10 @@ class StatisticsViewModel extends ChangeNotifier {
   int get selectedYear => _selectedYear;
 
   StatisticsViewModel() {
-    _initializeData();
+    initializeData();
   }
 
-  void _initializeData() {
+  void initializeData() {
     loadDailyUsage();
     calculateSelectedWeek();
     loadWeeklyUsage();

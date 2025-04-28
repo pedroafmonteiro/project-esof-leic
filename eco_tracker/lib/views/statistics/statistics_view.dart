@@ -1,10 +1,12 @@
 import 'package:animations/animations.dart';
+import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/statistics/widgets/pages/daily_page.dart';
 import 'package:eco_tracker/views/statistics/widgets/pages/monthly_page.dart';
 import 'package:eco_tracker/views/statistics/widgets/pages/weekly_page.dart';
 import 'package:eco_tracker/views/statistics/widgets/pages/yearly_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class StatisticsView extends StatefulWidget {
   const StatisticsView({super.key});
@@ -38,6 +40,12 @@ class StatisticsPage extends GeneralPage {
     required this.selectedIndex,
     required this.onFilterChanged,
   }) : super(title: "Statistics", hasFAB: false);
+
+  @override
+  Future<void> onRefresh(BuildContext context) async {
+    return Provider.of<StatisticsViewModel>(context, listen: false)
+        .initializeData();
+  }
 
   @override
   Widget buildBody(BuildContext context) {
