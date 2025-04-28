@@ -124,7 +124,7 @@ void main() {
         manufacturer: 'EcoTech',
         category: 'Sensor',
         powerConsumption: 5,
-      ));
+      ),);
 
       // Call the method under test
       await deviceViewModel.updateDevice(updatedDevice);

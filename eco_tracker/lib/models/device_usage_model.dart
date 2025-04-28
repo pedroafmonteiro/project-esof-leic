@@ -46,8 +46,7 @@ class WeeklyUsageSummary {
   final double totalKwh;
   final double totalCost;
   final Map<int, double> dailyConsumption;
-  final Map<String, double>
-      deviceConsumption;
+  final Map<String, double> deviceConsumption;
 
   WeeklyUsageSummary({
     required this.weekNumber,
@@ -65,8 +64,7 @@ class MonthlyUsageSummary {
   final double totalKwh;
   final double totalCost;
   final Map<int, double> dailyConsumption;
-  final Map<String, double>
-      deviceConsumption;
+  final Map<String, double> deviceConsumption;
 
   MonthlyUsageSummary({
     required this.month,
@@ -83,8 +81,7 @@ class YearlyUsageSummary {
   final double totalKwh;
   final double totalCost;
   final Map<int, double> monthlyConsumption;
-  final Map<String, double>
-      deviceConsumption;
+  final Map<String, double> deviceConsumption;
 
   YearlyUsageSummary({
     required this.year,

@@ -67,6 +67,6 @@ class TopConsumers extends StatelessWidget {
 
   Future<String> _getDeviceName(String deviceId) async {
     final device = await DeviceService().getDeviceById(deviceId);
-    return '${device.manufacturer} ${device.model}';
+    return '${device?.manufacturer} ${device?.model}';
   }
 }

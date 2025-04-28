@@ -1,13 +1,18 @@
 import 'package:eco_tracker/models/device_model.dart';
+import 'package:eco_tracker/services/device_service.dart';
+import 'package:eco_tracker/services/user_service.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
+import 'package:eco_tracker/views/maintainer/maintainer_devices_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DevicesView extends GeneralPage {
   DevicesView({super.key})
       : super(title: "Devices", hasFAB: true, fabIcon: Icon(Icons.add));
+
+  final UserService _userService = UserService();
 
   @override
   Future<void> onRefresh(BuildContext context) async {
@@ -37,7 +42,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: modelController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Model',
                   border: OutlineInputBorder(),
                 ),
@@ -50,7 +55,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: manufacturerController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Manufacturer',
                   border: OutlineInputBorder(),
                 ),
@@ -63,7 +68,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: categoryController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Category',
                   border: OutlineInputBorder(),
                 ),
@@ -77,7 +82,7 @@ class DevicesView extends GeneralPage {
               TextFormField(
                 controller: powerConsumptionController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Power consumption (Wattage)',
                   border: OutlineInputBorder(),
                 ),
@@ -92,16 +97,81 @@ class DevicesView extends GeneralPage {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: null,
+                    onPressed: () async {
+                      final deviceService = DeviceService();
+                      final companyDevices =
+                          await deviceService.getAllCompanyDevices();
+
+                      final selectedDevice = await showModalBottomSheet<Device>(
+                        context: context,
+                        builder: (context) {
+                          if (companyDevices.isEmpty) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text('No company devices available.'),
+                              ),
+                            );
+                          }
+
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  'Company Devices Catalog',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: companyDevices.length,
+                                  itemBuilder: (context, index) {
+                                    final device = companyDevices[index];
+                                    return ListTile(
+                                      title: Text(device.model),
+                                      subtitle: Text(
+                                        '${device.manufacturer} - ${device.category}',
+                                      ),
+                                      trailing:
+                                          Text('${device.powerConsumption} W'),
+                                      onTap: () {
+                                        Navigator.pop(context, device);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      if (selectedDevice != null) {
+                        final String manufacturer =
+                            selectedDevice.manufacturer.contains(' (')
+                                ? selectedDevice.manufacturer.substring(
+                                    0,
+                                    selectedDevice.manufacturer.indexOf(' ('),
+                                  )
+                                : selectedDevice.manufacturer;
+
+                        modelController.text = selectedDevice.model;
+                        manufacturerController.text = manufacturer;
+                        categoryController.text = selectedDevice.category;
+                        powerConsumptionController.text =
+                            selectedDevice.powerConsumption.toString();
+                      }
+                    },
                     style: ButtonStyle(
-                      padding: WidgetStateProperty.all(
-                        EdgeInsets.only(left: 0.0),
-                      ),
                       backgroundColor: WidgetStateProperty.all(
-                        Colors.transparent,
+                        Theme.of(context).colorScheme.secondary,
+                      ),
+                      foregroundColor: WidgetStateProperty.all(
+                        Theme.of(context).colorScheme.onSecondary,
                       ),
                     ),
-                    child: Text('Select from list'),
+                    child: const Text('Select from companies'),
                   ),
                   ElevatedButton(
                     style: ButtonStyle(
@@ -129,7 +199,7 @@ class DevicesView extends GeneralPage {
                         Navigator.pop(context);
                       }
                     },
-                    child: Text('Save'),
+                    child: const Text('Save'),
                   ),
                 ],
               ),
@@ -142,13 +212,11 @@ class DevicesView extends GeneralPage {
 
   void _showEditDeviceSheet(BuildContext context, Device device) {
     final modelController = TextEditingController(text: device.model);
-    final manufacturerController = TextEditingController(
-      text: device.manufacturer,
-    );
+    final manufacturerController =
+        TextEditingController(text: device.manufacturer);
     final categoryController = TextEditingController(text: device.category);
-    final powerConsumptionController = TextEditingController(
-      text: device.powerConsumption.toString(),
-    );
+    final powerConsumptionController =
+        TextEditingController(text: device.powerConsumption.toString());
     final formKey = GlobalKey<FormState>();
 
     showModalBottomSheet(
@@ -166,7 +234,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: modelController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Model',
                   border: OutlineInputBorder(),
                 ),
@@ -176,7 +244,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: manufacturerController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Manufacturer',
                   border: OutlineInputBorder(),
                 ),
@@ -186,7 +254,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: categoryController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Category',
                   border: OutlineInputBorder(),
                 ),
@@ -197,7 +265,7 @@ class DevicesView extends GeneralPage {
               TextFormField(
                 controller: powerConsumptionController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Power consumption (Wattage)',
                   border: OutlineInputBorder(),
                 ),
@@ -222,9 +290,8 @@ class DevicesView extends GeneralPage {
                         model: modelController.text,
                         manufacturer: manufacturerController.text,
                         category: categoryController.text,
-                        powerConsumption: int.parse(
-                          powerConsumptionController.text,
-                        ),
+                        powerConsumption:
+                            int.parse(powerConsumptionController.text),
                       );
                       Provider.of<DeviceViewModel>(
                         context,
@@ -233,7 +300,7 @@ class DevicesView extends GeneralPage {
                       Navigator.pop(context);
                     }
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ),
             ],
@@ -245,57 +312,94 @@ class DevicesView extends GeneralPage {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Consumer<DeviceViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.isLoading) {
-          return Center(child: CircularProgressIndicator());
-        } else if (viewModel.devices.isNotEmpty) {
-          return ListView.builder(
-            itemCount: viewModel.devices.length,
-            itemBuilder: (context, index) {
-              final device = viewModel.devices[index];
-              return Card(
-                child: ListTile(
-                  title: Text(device.model),
-                  subtitle: Text('${device.manufacturer} - ${device.category}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit_rounded),
-                        onPressed: () {
-                          _showEditDeviceSheet(context, device);
-                        },
+    return Column(
+      children: [
+        FutureBuilder<bool>(
+          future: _userService.isMaintainer(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 48,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            } else if (snapshot.hasData && snapshot.data!) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MaintainerDevicesView(),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete_rounded),
-                        onPressed: () {
-                          Provider.of<DeviceViewModel>(
-                            context,
-                            listen: false,
-                          ).removeDevice(device.id!);
-                        },
-                      ),
-                    ],
+                    );
+                  },
+                  icon: const Icon(Icons.admin_panel_settings),
+                  label: const Text("Maintainer Panel"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
                   ),
                 ),
               );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
+        Expanded(
+          child: Consumer<DeviceViewModel>(
+            builder: (context, viewModel, child) {
+              if (viewModel.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (viewModel.devices.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: viewModel.devices.length,
+                  itemBuilder: (context, index) {
+                    final device = viewModel.devices[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(device.model),
+                        subtitle:
+                            Text('${device.manufacturer} - ${device.category}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit_rounded),
+                              onPressed: () {
+                                _showEditDeviceSheet(context, device);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_rounded),
+                              onPressed: () {
+                                Provider.of<DeviceViewModel>(
+                                  context,
+                                  listen: false,
+                                ).removeDevice(device.id!);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+              return CustomScrollView(
+                slivers: [
+                  const SliverFillRemaining(
+                    child: Center(
+                      child: Text("You haven't added any devices yet."),
+                    ),
+                  ),
+                ],
+              );
             },
-          );
-        }
-        return CustomScrollView(
-          slivers: <Widget>[
-            SliverFillRemaining(
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: Text("You haven't added any devices yet."),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 }
