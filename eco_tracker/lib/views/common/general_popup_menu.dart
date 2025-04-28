@@ -83,6 +83,7 @@ class DevicePopupMenu {
           return PopupMenuItem<Device>(
             height: 50,
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            value: device,
             child: Container(
               width: double.infinity,
               alignment: Alignment.centerLeft,

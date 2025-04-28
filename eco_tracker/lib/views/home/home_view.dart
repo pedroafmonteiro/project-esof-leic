@@ -13,8 +13,7 @@ class HomeView extends GeneralPage {
   @override
   Widget buildBody(BuildContext context) {
     return FutureBuilder<String>(
-      future: tipsService
-          .getTodaysTip(), // Call inside buildBody instead of constructor
+      future: tipsService.getTodaysTip(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -180,10 +179,6 @@ class HomeView extends GeneralPage {
                                     final minutes =
                                         int.tryParse(minutesController.text) ??
                                             0;
-
-                                    print(
-                                      'Recording usage for ${selectedDevice!.manufacturer} ${selectedDevice!.model}: $hours hours and $minutes minutes',
-                                    );
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
