@@ -1,6 +1,7 @@
 import 'package:eco_tracker/firebase_options.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:eco_tracker/services/settings_service.dart';
+import 'package:eco_tracker/views/devices/devices_view.dart';
 import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/login/login_view.dart';
 import 'package:eco_tracker/views/navigation/navigation_view.dart';
@@ -61,6 +62,9 @@ class MainApp extends StatelessWidget {
 
     authService.getUserAvatar();
     return MaterialApp(
+      routes: {
+        '/devices': (context) => DevicesView(),
+      },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

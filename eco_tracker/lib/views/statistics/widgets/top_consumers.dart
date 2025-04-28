@@ -1,3 +1,4 @@
+import 'package:eco_tracker/services/device_service.dart';
 import 'package:flutter/material.dart';
 
 class TopConsumers extends StatelessWidget {
@@ -65,7 +66,7 @@ class TopConsumers extends StatelessWidget {
   }
 
   Future<String> _getDeviceName(String deviceId) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    return deviceId;
+    final device = await DeviceService().getDeviceById(deviceId);
+    return '${device.manufacturer} ${device.model}';
   }
 }

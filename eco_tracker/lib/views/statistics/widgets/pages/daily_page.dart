@@ -29,10 +29,10 @@ class DailyView extends StatelessWidget {
     final double usageKwh = dailyUsage?.totalKwh ?? 0;
     final double costEuros = dailyUsage?.totalCost ?? 0;
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: SingleChildScrollView(
-        child: Padding(
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: Column(
             spacing: 8.0,
@@ -73,10 +73,11 @@ class DailyView extends StatelessWidget {
                     ),
                   ),
                 ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 
