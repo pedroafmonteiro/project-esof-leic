@@ -13,9 +13,9 @@ class DevicePicker {
         return AlertDialog(
           title: const Text('Select a Device'),
           content: devices.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text('No devices available'),
+              ? SizedBox(
+                  height: 100,
+                  child: Center(child: const Text('No devices available')),
                 )
               : SizedBox(
                   width: double.maxFinite,
@@ -27,7 +27,8 @@ class DevicePicker {
                       return ListTile(
                         title: Text('${device.manufacturer} ${device.model}'),
                         subtitle: Text(
-                            '${device.category} - ${device.powerConsumption}W',),
+                          '${device.category} - ${device.powerConsumption}W',
+                        ),
                         selected: selectedDevice?.id == device.id,
                         onTap: () {
                           Navigator.of(context).pop(device);
