@@ -21,7 +21,10 @@ class _NavigationViewState extends State<NavigationView> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentPageIndex,
         destinations: [
-          NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
+          NavigationDestination(
+            icon: Icon(Icons.home_rounded),
+            label: 'Home',
+          ),
           NavigationDestination(
             icon: Icon(Icons.leaderboard_rounded),
             label: 'Statistics',
@@ -39,13 +42,13 @@ class _NavigationViewState extends State<NavigationView> {
       ),
       body: PageTransitionSwitcher(
         duration: Duration(milliseconds: 300),
-        transitionBuilder:
-            (child, animation, secondaryAnimation) => SharedAxisTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.horizontal,
-              child: child,
-            ),
+        transitionBuilder: (child, animation, secondaryAnimation) =>
+            SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
+        ),
         child: _getPage(currentPageIndex),
       ),
     );

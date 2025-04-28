@@ -41,18 +41,17 @@ class ProfileView extends StatelessWidget {
                     child: SizedBox(
                       width: 200,
                       height: 200,
-                      child:
-                          avatarUrl != null
-                              ? CircleAvatar(
-                                radius: 100,
-                                backgroundColor: Colors.transparent,
-                                backgroundImage: CachedNetworkImageProvider(
-                                  avatarUrl!,
-                                ),
-                              )
-                              : CircleAvatar(
-                                backgroundColor: Colors.transparent,
+                      child: avatarUrl != null
+                          ? CircleAvatar(
+                              radius: 100,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: CachedNetworkImageProvider(
+                                avatarUrl!,
                               ),
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                            ),
                     ),
                   ),
                 ),
@@ -75,8 +74,9 @@ class ProfileView extends StatelessWidget {
                     return Text(
                       email,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
                     );
                   },
                 ),
