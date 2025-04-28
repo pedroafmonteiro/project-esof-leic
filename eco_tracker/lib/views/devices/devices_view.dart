@@ -2,6 +2,9 @@ import 'package:eco_tracker/models/device_model.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
+import 'package:eco_tracker/views/maintainer/maintainer_devices_info_view.dart';
+import 'package:eco_tracker/views/maintainer/maintainer_devices_view.dart';
+import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -92,13 +95,47 @@ class DevicesView extends GeneralPage {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: null,
+                    onPressed: () async {
+                      final selectedDevice = await showModalBottomSheet<Device>(
+                        context: context,
+                        builder: (context) {
+                          return Consumer<DeviceViewModel>(
+                            builder: (context, viewModel, child) {
+                              if (viewModel.devices.isEmpty) {
+                                return Center(child: Text('No devices available.'));
+                              }
+                              return ListView.builder(
+                                itemCount: viewModel.devices.length,
+                                itemBuilder: (context, index) {
+                                  final device = viewModel.devices[index];
+                                  return ListTile(
+                                    title: Text(device.model),
+                                    subtitle: Text('${device.manufacturer} - ${device.category}'),
+                                    trailing: Text('${device.powerConsumption} W'),
+                                    onTap: () {
+                                      Navigator.pop(context, device);
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      );
+
+                      if (selectedDevice != null) {
+                        modelController.text = selectedDevice.model;
+                        manufacturerController.text = selectedDevice.manufacturer;
+                        categoryController.text = selectedDevice.category;
+                        powerConsumptionController.text = selectedDevice.powerConsumption.toString();
+                      }
+                    },
                     style: ButtonStyle(
-                      padding: WidgetStateProperty.all(
-                        EdgeInsets.only(left: 0.0),
-                      ),
                       backgroundColor: WidgetStateProperty.all(
-                        Colors.transparent,
+                        Theme.of(context).colorScheme.secondary,
+                      ),
+                      foregroundColor: WidgetStateProperty.all(
+                        Theme.of(context).colorScheme.onSecondary,
                       ),
                     ),
                     child: Text('Select from list'),
@@ -142,13 +179,9 @@ class DevicesView extends GeneralPage {
 
   void _showEditDeviceSheet(BuildContext context, Device device) {
     final modelController = TextEditingController(text: device.model);
-    final manufacturerController = TextEditingController(
-      text: device.manufacturer,
-    );
+    final manufacturerController = TextEditingController(text: device.manufacturer);
     final categoryController = TextEditingController(text: device.category);
-    final powerConsumptionController = TextEditingController(
-      text: device.powerConsumption.toString(),
-    );
+    final powerConsumptionController = TextEditingController(text: device.powerConsumption.toString());
     final formKey = GlobalKey<FormState>();
 
     showModalBottomSheet(
@@ -170,9 +203,7 @@ class DevicesView extends GeneralPage {
                   hintText: 'Model',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Field cannot be empty.'
-                    : null,
+                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
               ),
               TextFormField(
                 controller: manufacturerController,
@@ -180,9 +211,7 @@ class DevicesView extends GeneralPage {
                   hintText: 'Manufacturer',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Field cannot be empty.'
-                    : null,
+                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
               ),
               TextFormField(
                 controller: categoryController,
@@ -190,9 +219,7 @@ class DevicesView extends GeneralPage {
                   hintText: 'Category',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Field cannot be empty.'
-                    : null,
+                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
               ),
               TextFormField(
                 controller: powerConsumptionController,
@@ -201,9 +228,7 @@ class DevicesView extends GeneralPage {
                   hintText: 'Power consumption (Wattage)',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Field cannot be empty.'
-                    : null,
+                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -222,9 +247,7 @@ class DevicesView extends GeneralPage {
                         model: modelController.text,
                         manufacturer: manufacturerController.text,
                         category: categoryController.text,
-                        powerConsumption: int.parse(
-                          powerConsumptionController.text,
-                        ),
+                        powerConsumption: int.parse(powerConsumptionController.text),
                       );
                       Provider.of<DeviceViewModel>(
                         context,
@@ -245,57 +268,79 @@ class DevicesView extends GeneralPage {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Consumer<DeviceViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.isLoading) {
-          return Center(child: CircularProgressIndicator());
-        } else if (viewModel.devices.isNotEmpty) {
-          return ListView.builder(
-            itemCount: viewModel.devices.length,
-            itemBuilder: (context, index) {
-              final device = viewModel.devices[index];
-              return Card(
-                child: ListTile(
-                  title: Text(device.model),
-                  subtitle: Text('${device.manufacturer} - ${device.category}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit_rounded),
-                        onPressed: () {
-                          _showEditDeviceSheet(context, device);
-                        },
+    final isMaintainer = Provider.of<AuthenticationService>(context).isMaintainer;
+
+    return Column(
+      children: [
+        if (isMaintainer) ...[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MaintainerDevicesView()));
+              },
+              icon: Icon(Icons.admin_panel_settings),
+              label: Text("Maintainer Panel"),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MaintainerDevicesInfoView()));
+              },
+              icon: Icon(Icons.info_outline),
+              label: Text("Maintainer Info"),
+            ),
+          ),
+        ],
+        Expanded(
+          child: Consumer<DeviceViewModel>(
+            builder: (context, viewModel, child) {
+              if (viewModel.isLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (viewModel.devices.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: viewModel.devices.length,
+                  itemBuilder: (context, index) {
+                    final device = viewModel.devices[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(device.model),
+                        subtitle: Text('${device.manufacturer} - ${device.category}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit_rounded),
+                              onPressed: () {
+                                _showEditDeviceSheet(context, device);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete_rounded),
+                              onPressed: () {
+                                Provider.of<DeviceViewModel>(context, listen: false).removeDevice(device.id!);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete_rounded),
-                        onPressed: () {
-                          Provider.of<DeviceViewModel>(
-                            context,
-                            listen: false,
-                          ).removeDevice(device.id!);
-                        },
-                      ),
-                    ],
+                    );
+                  },
+                );
+              }
+              return CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    child: Center(child: Text("You haven't added any devices yet.")),
                   ),
-                ),
+                ],
               );
             },
-          );
-        }
-        return CustomScrollView(
-          slivers: <Widget>[
-            SliverFillRemaining(
-              child: Container(
-                color: Colors.transparent,
-                child: Center(
-                  child: Text("You haven't added any devices yet."),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 }
