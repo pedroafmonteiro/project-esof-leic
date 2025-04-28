@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsManager {
   static bool? _darkMode;
-  
+
   static bool get darkMode => _darkMode ?? false;
-  
+
   static Future<void> preloadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     _darkMode = prefs.getBool(SettingsService._darkModeKey) ?? false;

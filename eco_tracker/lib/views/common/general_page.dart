@@ -41,9 +41,8 @@ abstract class GeneralPage extends StatelessWidget {
                   final avatarUrl = provider.cachedAvatarUrl;
                   Navigator.of(context).push(
                     PageRouteBuilder(
-                      pageBuilder:
-                          (context, animation, secondaryAnimation) =>
-                              ProfileView(avatarUrl: avatarUrl),
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          ProfileView(avatarUrl: avatarUrl),
                       transitionsBuilder: (
                         context,
                         animation,
@@ -66,15 +65,14 @@ abstract class GeneralPage extends StatelessWidget {
                   child: SizedBox(
                     width: 40,
                     height: 40,
-                    child:
-                        provider.cachedAvatarUrl != null
-                            ? CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              backgroundImage: CachedNetworkImageProvider(
-                                provider.cachedAvatarUrl!,
-                              ),
-                            )
-                            : CircleAvatar(backgroundColor: Colors.transparent),
+                    child: provider.cachedAvatarUrl != null
+                        ? CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: CachedNetworkImageProvider(
+                              provider.cachedAvatarUrl!,
+                            ),
+                          )
+                        : CircleAvatar(backgroundColor: Colors.transparent),
                   ),
                 ),
               );
@@ -83,15 +81,14 @@ abstract class GeneralPage extends StatelessWidget {
         ],
         actionsPadding: EdgeInsets.only(right: 8.0),
       ),
-      floatingActionButton:
-          hasFAB
-              ? FloatingActionButton(
-                onPressed: () => fabFunction(context),
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                foregroundColor: Theme.of(context).colorScheme.onSurface,
-                child: fabIcon,
-              )
-              : null,
+      floatingActionButton: hasFAB
+          ? FloatingActionButton(
+              onPressed: () => fabFunction(context),
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
+              child: fabIcon,
+            )
+          : null,
       body: RefreshIndicator(
         onRefresh: () async {
           onRefresh(context);
