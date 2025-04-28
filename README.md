@@ -305,6 +305,26 @@ Happiness Meter:
 
 ### Sprint 2
 
+Initial GitHub Project screenshot:
+
+<p align="center">
+  <img src="images/sprint2/initial.png" 
+  alt="Initial screenshot of sprint 2."/>
+</p>
+
+Final GitHub Project screenshot:
+
+<p align="center">
+  <img src="images/sprint2/final.png" 
+  alt="Final screenshot of sprint 2."/>
+</p>
+
+Product release - version 0.3.0
+
+Retrospectives:
+- What did well: we achieved what we planned for this sprint, statistics page all working with the log device usage functionality and now our app has maintainers from companies who can add home appliances for users to add them more easily.
+- What should we do differently: better organize the project issues across team members and a better sprint planning. Start coding right at the beginning of the sprint.
+
 ### Sprint 3
 
 ### Sprint 4
