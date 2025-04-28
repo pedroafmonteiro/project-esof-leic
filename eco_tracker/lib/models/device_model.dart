@@ -29,6 +29,15 @@ class Device {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'model': model,
+      'manufacturer': manufacturer,
+      'category': category,
+      'powerConsumption': powerConsumption,
+    };
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -47,6 +56,18 @@ class Device {
       category: json['category'],
       powerConsumption: json['powerConsumption'] is num
           ? (json['powerConsumption'] as num).toInt()
+          : 0,
+    );
+  }
+
+  factory Device.fromMap(Map<String, dynamic> map, String id) {
+    return Device(
+      id: id,
+      model: map['model'] ?? '',
+      manufacturer: map['manufacturer'] ?? '',
+      category: map['category'] ?? '',
+      powerConsumption: map['powerConsumption'] is num
+          ? (map['powerConsumption'] as num).toInt()
           : 0,
     );
   }

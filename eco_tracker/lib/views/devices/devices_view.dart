@@ -1,16 +1,18 @@
 import 'package:eco_tracker/models/device_model.dart';
+import 'package:eco_tracker/services/device_service.dart';
+import 'package:eco_tracker/services/user_service.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
-import 'package:eco_tracker/views/maintainer/maintainer_devices_info_view.dart';
 import 'package:eco_tracker/views/maintainer/maintainer_devices_view.dart';
-import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DevicesView extends GeneralPage {
   DevicesView({super.key})
       : super(title: "Devices", hasFAB: true, fabIcon: Icon(Icons.add));
+
+  final UserService _userService = UserService();
 
   @override
   Future<void> onRefresh(BuildContext context) async {
@@ -40,7 +42,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: modelController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Model',
                   border: OutlineInputBorder(),
                 ),
@@ -53,7 +55,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: manufacturerController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Manufacturer',
                   border: OutlineInputBorder(),
                 ),
@@ -66,7 +68,7 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: categoryController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Category',
                   border: OutlineInputBorder(),
                 ),
@@ -80,7 +82,7 @@ class DevicesView extends GeneralPage {
               TextFormField(
                 controller: powerConsumptionController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Power consumption (Wattage)',
                   border: OutlineInputBorder(),
                 ),
@@ -96,38 +98,69 @@ class DevicesView extends GeneralPage {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
+                      final deviceService = DeviceService();
+                      final companyDevices =
+                          await deviceService.getAllCompanyDevices();
+
                       final selectedDevice = await showModalBottomSheet<Device>(
                         context: context,
                         builder: (context) {
-                          return Consumer<DeviceViewModel>(
-                            builder: (context, viewModel, child) {
-                              if (viewModel.devices.isEmpty) {
-                                return Center(child: Text('No devices available.'));
-                              }
-                              return ListView.builder(
-                                itemCount: viewModel.devices.length,
-                                itemBuilder: (context, index) {
-                                  final device = viewModel.devices[index];
-                                  return ListTile(
-                                    title: Text(device.model),
-                                    subtitle: Text('${device.manufacturer} - ${device.category}'),
-                                    trailing: Text('${device.powerConsumption} W'),
-                                    onTap: () {
-                                      Navigator.pop(context, device);
-                                    },
-                                  );
-                                },
-                              );
-                            },
+                          if (companyDevices.isEmpty) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text('No company devices available.'),
+                              ),
+                            );
+                          }
+
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  'Company Devices Catalog',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: companyDevices.length,
+                                  itemBuilder: (context, index) {
+                                    final device = companyDevices[index];
+                                    return ListTile(
+                                      title: Text(device.model),
+                                      subtitle: Text(
+                                        '${device.manufacturer} - ${device.category}',
+                                      ),
+                                      trailing:
+                                          Text('${device.powerConsumption} W'),
+                                      onTap: () {
+                                        Navigator.pop(context, device);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           );
                         },
                       );
 
                       if (selectedDevice != null) {
+                        final String manufacturer =
+                            selectedDevice.manufacturer.contains(' (')
+                                ? selectedDevice.manufacturer.substring(
+                                    0,
+                                    selectedDevice.manufacturer.indexOf(' ('),
+                                  )
+                                : selectedDevice.manufacturer;
+
                         modelController.text = selectedDevice.model;
-                        manufacturerController.text = selectedDevice.manufacturer;
+                        manufacturerController.text = manufacturer;
                         categoryController.text = selectedDevice.category;
-                        powerConsumptionController.text = selectedDevice.powerConsumption.toString();
+                        powerConsumptionController.text =
+                            selectedDevice.powerConsumption.toString();
                       }
                     },
                     style: ButtonStyle(
@@ -138,7 +171,7 @@ class DevicesView extends GeneralPage {
                         Theme.of(context).colorScheme.onSecondary,
                       ),
                     ),
-                    child: Text('Select from list'),
+                    child: const Text('Select from companies'),
                   ),
                   ElevatedButton(
                     style: ButtonStyle(
@@ -166,7 +199,7 @@ class DevicesView extends GeneralPage {
                         Navigator.pop(context);
                       }
                     },
-                    child: Text('Save'),
+                    child: const Text('Save'),
                   ),
                 ],
               ),
@@ -179,9 +212,11 @@ class DevicesView extends GeneralPage {
 
   void _showEditDeviceSheet(BuildContext context, Device device) {
     final modelController = TextEditingController(text: device.model);
-    final manufacturerController = TextEditingController(text: device.manufacturer);
+    final manufacturerController =
+        TextEditingController(text: device.manufacturer);
     final categoryController = TextEditingController(text: device.category);
-    final powerConsumptionController = TextEditingController(text: device.powerConsumption.toString());
+    final powerConsumptionController =
+        TextEditingController(text: device.powerConsumption.toString());
     final formKey = GlobalKey<FormState>();
 
     showModalBottomSheet(
@@ -199,36 +234,44 @@ class DevicesView extends GeneralPage {
               ),
               TextFormField(
                 controller: modelController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Model',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
               ),
               TextFormField(
                 controller: manufacturerController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Manufacturer',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
               ),
               TextFormField(
                 controller: categoryController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Category',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
               ),
               TextFormField(
                 controller: powerConsumptionController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Power consumption (Wattage)',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value == null || value.isEmpty ? 'Field cannot be empty.' : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Field cannot be empty.'
+                    : null,
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -247,7 +290,8 @@ class DevicesView extends GeneralPage {
                         model: modelController.text,
                         manufacturer: manufacturerController.text,
                         category: categoryController.text,
-                        powerConsumption: int.parse(powerConsumptionController.text),
+                        powerConsumption:
+                            int.parse(powerConsumptionController.text),
                       );
                       Provider.of<DeviceViewModel>(
                         context,
@@ -256,7 +300,7 @@ class DevicesView extends GeneralPage {
                       Navigator.pop(context);
                     }
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ),
             ],
@@ -268,37 +312,46 @@ class DevicesView extends GeneralPage {
 
   @override
   Widget buildBody(BuildContext context) {
-    final isMaintainer = Provider.of<AuthenticationService>(context).isMaintainer;
-
     return Column(
       children: [
-        if (isMaintainer) ...[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MaintainerDevicesView()));
-              },
-              icon: Icon(Icons.admin_panel_settings),
-              label: Text("Maintainer Panel"),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MaintainerDevicesInfoView()));
-              },
-              icon: Icon(Icons.info_outline),
-              label: Text("Maintainer Info"),
-            ),
-          ),
-        ],
+        FutureBuilder<bool>(
+          future: _userService.isMaintainer(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 48,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            } else if (snapshot.hasData && snapshot.data!) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MaintainerDevicesView(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.admin_panel_settings),
+                  label: const Text("Maintainer Panel"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
         Expanded(
           child: Consumer<DeviceViewModel>(
             builder: (context, viewModel, child) {
               if (viewModel.isLoading) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (viewModel.devices.isNotEmpty) {
                 return ListView.builder(
                   itemCount: viewModel.devices.length,
@@ -307,20 +360,24 @@ class DevicesView extends GeneralPage {
                     return Card(
                       child: ListTile(
                         title: Text(device.model),
-                        subtitle: Text('${device.manufacturer} - ${device.category}'),
+                        subtitle:
+                            Text('${device.manufacturer} - ${device.category}'),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.edit_rounded),
+                              icon: const Icon(Icons.edit_rounded),
                               onPressed: () {
                                 _showEditDeviceSheet(context, device);
                               },
                             ),
                             IconButton(
-                              icon: Icon(Icons.delete_rounded),
+                              icon: const Icon(Icons.delete_rounded),
                               onPressed: () {
-                                Provider.of<DeviceViewModel>(context, listen: false).removeDevice(device.id!);
+                                Provider.of<DeviceViewModel>(
+                                  context,
+                                  listen: false,
+                                ).removeDevice(device.id!);
                               },
                             ),
                           ],
@@ -332,8 +389,10 @@ class DevicesView extends GeneralPage {
               }
               return CustomScrollView(
                 slivers: [
-                  SliverFillRemaining(
-                    child: Center(child: Text("You haven't added any devices yet.")),
+                  const SliverFillRemaining(
+                    child: Center(
+                      child: Text("You haven't added any devices yet."),
+                    ),
                   ),
                 ],
               );
