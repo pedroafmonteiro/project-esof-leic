@@ -340,37 +340,37 @@ Happiness Meters(sprint2):
     <th>João</th>
     <td>⭐ Excellent</td>
     <td>⭐ Excellent</td>
-    <td>⭐ Excellent</td>
-    <td>⭐ Excellent</td>
-    <td>⭐ Excellent</td>
+    <td>😒 Fair</td>
+    <td>😒 Fair</td>
+    <td>😒 Fair</td>
   </tr>
   <tr>
     <th>Pedro</th>
     <td>⭐ Excellent</td>
     <td>⭐ Excellent</td>
-    <td>⭐ Excellent</td>
-    <td>⭐ Excellent</td>
-    <td>⭐ Excellent</td>
+    <td>😒 Fair</td>
+    <td>😒 Fair</td>
+    <td>😒 Fair</td>
   </tr>
   <tr>
     <th>Rodrigo</th>
-    <td>😒 Fair</td>
-    <td>😒 Fair</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
     <td>😊 good</td>
     <td>😊 good</td>
     <td>😊 good</td>
   </tr>
   <tr>
     <th>Guilherme</th>
-    <td>😒 Fair</td>
-    <td>😒 Fair</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
     <td>😊 good</td>
     <td>😊 good</td>
     <td>😊 good</td>
   </tr>
     <th>Vicente</th>
-    <td>😒 Fair</td>
-    <td>😒 Fair</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
     <td>😊 good</td>
     <td>😊 good</td>
     <td>😊 good</td>
