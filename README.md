@@ -308,7 +308,7 @@ Happiness Meters:
 Vertical prototype:
 
 <p align="center">
-  <img width="350" src="images/vertical_prototype2.mp4" 
+  <img width="350" src="images/vertical_prototype2.gif" 
   alt="Vertical prototype2."/>
 </p>
 
@@ -381,8 +381,8 @@ Happiness Meters(sprint2):
     <td>😊 good</td>
     <td>😊 good</td>
     <td>😊 good</td>
- 
 </table>
+
 ### Sprint 3
 
 ### Sprint 4
