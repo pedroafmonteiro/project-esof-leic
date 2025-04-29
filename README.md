@@ -308,7 +308,7 @@ Happiness Meters:
 Vertical prototype:
 
 <p align="center">
-  <img width="350" src="images/vertical_prototype2.gif" 
+  <img width="350" src="images/vertical_prototype2.mp4" 
   alt="Vertical prototype2."/>
 </p>
 
