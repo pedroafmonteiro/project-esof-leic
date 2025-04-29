@@ -294,7 +294,7 @@ Retrospectives:
 - What did well: we achieved what we planned for this sprint, with the option to add and remove devices, as well as a new tip of the day feature in the home screen and also a new profile page where the user can now sign out. We also did some things that were not planned as we had a little bit of extra time, such as, added a functional dark mode toggle and added an onRefresh function to the general page with the devices page working.
 - What should we do differently: better organize the project issues across team members and a better sprint planning, so some people have easy issues and others difficult ones.
 
-Happiness Meter:
+Happiness Meters:
 
 <p align="center">
   <img src="images/sprint1/happiness_meters.png" 
@@ -325,6 +325,57 @@ Retrospectives:
 - What did well: we achieved what we planned for this sprint, statistics page all working with the log device usage functionality and now our app has maintainers from companies who can add home appliances for users to add them more easily.
 - What should we do differently: better organize the project issues across team members and a better sprint planning. Start coding right at the beginning of the sprint.
 
+Happiness Meters(sprint2):
+
+<table border="1" cellspacing="0" cellpadding="10">
+  <tr>
+    <th></th>
+    <th>João</th>
+    <th>Pedro</th>
+    <th>Rodrigo</th>
+    <th>Guilherme</th>
+    <th>Vicente</th>
+  </tr>
+  <tr>
+    <th>João</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Pedro</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Rodrigo</th>
+    <td>😒 Fair</td>
+    <td>😒 Fair</td>
+    <td>😊 good</td>
+    <td>😊 good</td>
+    <td>😊 good</td>
+  </tr>
+  <tr>
+    <th>Guilherme</th>
+    <td>😒 Fair</td>
+    <td>😒 Fair</td>
+    <td>😊 good</td>
+    <td>😊 good</td>
+    <td>😊 good</td>
+  </tr>
+    <th>Vicente</th>
+    <td>😒 Fair</td>
+    <td>😒 Fair</td>
+    <td>😊 good</td>
+    <td>😊 good</td>
+    <td>😊 good</td>
+ 
+</table>
 ### Sprint 3
 
 ### Sprint 4
