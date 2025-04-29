@@ -305,6 +305,11 @@ Happiness Meters:
 
 ### Sprint 2
 
+Vertical prototype:
+<div style="text-align: center;">
+    <img src="images/vertical_prototype2.mp4 alt="Demo" width="200"/>
+</div>
+
 Initial GitHub Project screenshot:
 
 <p align="center">
