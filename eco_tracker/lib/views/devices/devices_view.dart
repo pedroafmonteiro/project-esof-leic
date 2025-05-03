@@ -10,9 +10,39 @@ import 'package:provider/provider.dart';
 
 class DevicesView extends GeneralPage {
   DevicesView({super.key})
-      : super(title: "Devices", hasFAB: true, fabIcon: Icon(Icons.add));
-
-  final UserService _userService = UserService();
+      : super(
+          title: "Devices",
+          hasFAB: true,
+          fabIcon: Icon(Icons.add),
+          secondaryActions: [
+            Builder(
+              builder: (context) {
+                return FutureBuilder<bool>(
+                  future: UserService().isMaintainer(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data!) {
+                      return IconButton(
+                        icon: const Icon(Icons.domain_add_rounded),
+                        tooltip: "Maintainer Panel",
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const MaintainerDevicesView(),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                );
+              },
+            ),
+          ],
+        );
 
   @override
   Future<void> onRefresh(BuildContext context) async {
@@ -312,94 +342,55 @@ class DevicesView extends GeneralPage {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Column(
-      children: [
-        FutureBuilder<bool>(
-          future: _userService.isMaintainer(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SizedBox(
-                height: 48,
-                child: Center(child: CircularProgressIndicator()),
-              );
-            } else if (snapshot.hasData && snapshot.data!) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MaintainerDevicesView(),
+    return Consumer<DeviceViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (viewModel.devices.isNotEmpty) {
+          return ListView.builder(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            itemCount: viewModel.devices.length,
+            itemBuilder: (context, index) {
+              final device = viewModel.devices[index];
+              return Card(
+                child: ListTile(
+                  title: Text(device.model),
+                  subtitle: Text('${device.manufacturer} - ${device.category}'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit_rounded),
+                        onPressed: () {
+                          _showEditDeviceSheet(context, device);
+                        },
                       ),
-                    );
-                  },
-                  icon: const Icon(Icons.admin_panel_settings),
-                  label: const Text("Maintainer Panel"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                      IconButton(
+                        icon: const Icon(Icons.delete_rounded),
+                        onPressed: () {
+                          Provider.of<DeviceViewModel>(
+                            context,
+                            listen: false,
+                          ).removeDevice(device.id!);
+                        },
+                      ),
+                    ],
                   ),
                 ),
               );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
-        Expanded(
-          child: Consumer<DeviceViewModel>(
-            builder: (context, viewModel, child) {
-              if (viewModel.isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (viewModel.devices.isNotEmpty) {
-                return ListView.builder(
-                  itemCount: viewModel.devices.length,
-                  itemBuilder: (context, index) {
-                    final device = viewModel.devices[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(device.model),
-                        subtitle:
-                            Text('${device.manufacturer} - ${device.category}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit_rounded),
-                              onPressed: () {
-                                _showEditDeviceSheet(context, device);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_rounded),
-                              onPressed: () {
-                                Provider.of<DeviceViewModel>(
-                                  context,
-                                  listen: false,
-                                ).removeDevice(device.id!);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }
-              return CustomScrollView(
-                slivers: [
-                  const SliverFillRemaining(
-                    child: Center(
-                      child: Text("You haven't added any devices yet."),
-                    ),
-                  ),
-                ],
-              );
             },
-          ),
-        ),
-      ],
+          );
+        }
+        return CustomScrollView(
+          slivers: [
+            const SliverFillRemaining(
+              child: Center(
+                child: Text("You haven't added any devices yet."),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -11,11 +11,13 @@ abstract class GeneralPage extends StatelessWidget {
     required this.title,
     required this.hasFAB,
     this.fabIcon,
+    this.secondaryActions,
   });
 
   final String title;
   final bool hasFAB;
   final Icon? fabIcon;
+  final List<Widget>? secondaryActions;
 
   void fabFunction(BuildContext context) {
     return;
@@ -34,6 +36,7 @@ abstract class GeneralPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
+          if (secondaryActions != null) ...secondaryActions!,
           Consumer<AuthenticationService>(
             builder: (context, provider, child) {
               return IconButton(
