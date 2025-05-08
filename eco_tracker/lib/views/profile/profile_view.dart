@@ -251,8 +251,10 @@ class ProfileView extends StatelessWidget {
                                             child:
                                                 settingsService.accentColor ==
                                                         option.color
-                                                    ? Icon(Icons.check,
-                                                        color: Colors.white)
+                                                    ? Icon(
+                                                        Icons.check,
+                                                        color: Colors.white,
+                                                      )
                                                     : null,
                                           ),
                                         );

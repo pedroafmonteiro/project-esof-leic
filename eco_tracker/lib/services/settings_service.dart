@@ -24,7 +24,6 @@ class SettingsService extends ChangeNotifier {
   static const String _materialYouKey = 'materialYou';
   static const String _accentColorKey = 'accentColor';
 
-  // Predefined colors for mapping
   static const List<PredefinedColor> predefinedColors = [
     PredefinedColor(name: 'Red', color: Colors.red),
     PredefinedColor(name: 'Orange', color: Colors.orange),
@@ -52,9 +51,6 @@ class SettingsService extends ChangeNotifier {
   }
 
   static Color findClosestPredefinedColor(Color color) {
-    double minDistance = double.infinity;
-    Color closestColor = Colors.green; // Default
-
     HSLColor hslColor = HSLColor.fromColor(color);
     double hue = hslColor.hue;
 
