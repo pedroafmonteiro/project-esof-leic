@@ -108,6 +108,35 @@ class AuthenticationService with ChangeNotifier {
     return prefs.getString('userAvatar');
   }
 
+  Future<void> deleteAccount() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('No user is currently signed in');
+      }
+
+      await user.delete();
+      
+      _currentUser = null;
+      _cachedAvatarUrl = null;
+      _removeUserAvatar();
+      
+      notifyListeners();
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'requires-recent-login':
+          errorMessage = 'Please sign in again before deleting your account for security reasons.';
+          break;
+        default:
+          errorMessage = 'Failed to delete account: ${e.message}';
+      }
+      throw Exception(errorMessage);
+    } catch (e) {
+      throw Exception('An unexpected error occurred: ${e.toString()}');
+    }
+  }
+
   Future<UserCredential?> signInWithEmailAndPassword(String email, String password) async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(

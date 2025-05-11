@@ -108,54 +108,6 @@ class ProfileView extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    /* Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Energy cost at your location",
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                              Text(
-                                "(€ per kWh)",
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 60,
-                          child: TextField(
-                            controller: TextEditingController(text: "0.15"),
-                            keyboardType: TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                            ),
-                            onChanged: (value) {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0), */
                     Row(
                       children: [
                         Text(
@@ -307,6 +259,60 @@ class ProfileView extends StatelessWidget {
                   },
                 ),
               ),
+              Center(
+                child: Consumer<AuthenticationService>(
+                  builder: (context, provider, child) {
+                    return TextButton(
+                      onPressed: () {
+                        // Show confirmation dialog before deleting account
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return AlertDialog(
+                              title: Text("Delete Account"),
+                              content: Text("Are you sure you want to permanently delete your account? This action cannot be undone."),
+                              actions: [
+                                TextButton(
+                                  child: Text("Cancel"),
+                                  onPressed: () {
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () async {
+                                    Navigator.of(dialogContext).pop();
+                                    try {
+                                      await provider.deleteAccount();
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                      }
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text("Failed to delete account: ${e.toString()}")),
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
+                      child: Text("Delete Account"),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 16.0),
             ],
           ),
         ),
