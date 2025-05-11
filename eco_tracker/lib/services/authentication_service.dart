@@ -264,8 +264,19 @@ class AuthenticationService with ChangeNotifier {
 
   Future<bool> isEmailAlreadyRegistered(String email) async {
     try {
-      final methods = await _auth.fetchSignInMethodsForEmail(email);
-      return methods.isNotEmpty;
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: 'temporaryPassword123!',
+      );
+      await _auth.currentUser?.delete();
+      await _auth.signOut();
+
+      return false;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }
