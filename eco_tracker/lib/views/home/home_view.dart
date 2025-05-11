@@ -6,6 +6,7 @@ import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/home/widgets/device_picker.dart';
 import 'package:eco_tracker/services/usage_service.dart';
+import 'package:eco_tracker/views/navigation/navigation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eco_tracker/services/tips_service.dart';
@@ -39,54 +40,59 @@ class HomeView extends GeneralPage {
 
   Widget _buildUsageSummaryCard(BuildContext context, MonthlyChartData data) {
     final now = DateTime.now();
-    return Card(
-      child: ListTile(
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            '${_monthNames[now.month - 1]} ${now.year}',
-            style: Theme.of(context).textTheme.headlineSmall,
+    return GestureDetector(
+      onTap: () {
+        NavigationView.navigateTo(1, statisticsTabIndex: 2);
+      },
+      child: Card(
+        child: ListTile(
+          title: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              '${_monthNames[now.month - 1]} ${now.year}',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
           ),
-        ),
-        subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Estimated Cost',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-                Text(
-                  '${data.totalCost} €',
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Total Usage',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-                Text(
-                  '${data.totalConsumption} kWh',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
-            ),
-          ],
-        ),
-        contentPadding: const EdgeInsets.only(
-          left: 16.0,
-          right: 16.0,
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Estimated Cost',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                  Text(
+                    '${data.totalCost} €',
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Total Usage',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                  Text(
+                    '${data.totalConsumption} kWh',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          contentPadding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+          ),
         ),
       ),
     );
