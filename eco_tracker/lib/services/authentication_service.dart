@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'exceptions.dart';
+
 class AuthenticationService with ChangeNotifier {
   GoogleSignInAccount? _currentUser;
   String? _cachedAvatarUrl;
@@ -116,28 +118,90 @@ class AuthenticationService with ChangeNotifier {
       }
 
       await user.delete();
-      
+
       _currentUser = null;
       _cachedAvatarUrl = null;
       _removeUserAvatar();
-      
+
       notifyListeners();
     } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      switch (e.code) {
-        case 'requires-recent-login':
-          errorMessage = 'Please sign in again before deleting your account for security reasons.';
-          break;
-        default:
-          errorMessage = 'Failed to delete account: ${e.message}';
+      if (e.code == 'requires-recent-login') {
+        throw ReauthenticationRequiredException(
+          'Please sign in again before deleting your account for security reasons.',
+        );
+      } else {
+        throw Exception('Failed to delete account: ${e.message}');
       }
-      throw Exception(errorMessage);
     } catch (e) {
       throw Exception('An unexpected error occurred: ${e.toString()}');
     }
   }
 
-  Future<UserCredential?> signInWithEmailAndPassword(String email, String password) async {
+  Future<bool> reauthenticateWithPassword(String password) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        return false;
+      }
+
+      if (user.email != null) {
+        final credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: password,
+        );
+        await user.reauthenticateWithCredential(credential);
+        return true;
+      }
+
+      return false;
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'wrong-password':
+          errorMessage = 'Incorrect password.';
+          break;
+        case 'user-mismatch':
+          errorMessage = 'Credentials don\'t match the current user.';
+          break;
+        default:
+          errorMessage = 'Reauthentication failed: ${e.message}';
+      }
+      throw Exception(errorMessage);
+    } catch (e) {
+      throw Exception('Reauthentication failed: ${e.toString()}');
+    }
+  }
+
+  Future<bool> reauthenticateWithGoogle() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        return false;
+      }
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return false;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+      return true;
+    } catch (e) {
+      throw Exception('Google reauthentication failed: ${e.toString()}');
+    }
+  }
+
+  Future<UserCredential?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -147,7 +211,6 @@ class AuthenticationService with ChangeNotifier {
       notifyListeners();
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      // Handle specific auth errors
       String errorMessage;
       switch (e.code) {
         case 'user-not-found':
@@ -169,7 +232,10 @@ class AuthenticationService with ChangeNotifier {
     }
   }
 
-  Future<UserCredential?> registerWithEmailAndPassword(String email, String password) async {
+  Future<UserCredential?> registerWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -179,7 +245,6 @@ class AuthenticationService with ChangeNotifier {
       notifyListeners();
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      // Handle specific registration errors
       String errorMessage;
       switch (e.code) {
         case 'email-already-in-use':
@@ -210,7 +275,6 @@ class AuthenticationService with ChangeNotifier {
     }
   }
 
-  // Password reset functionality
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);

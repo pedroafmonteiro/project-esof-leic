@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
+import 'package:eco_tracker/services/exceptions.dart';
 import 'package:eco_tracker/services/settings_service.dart';
+import 'package:eco_tracker/widgets/reauthentication_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,30 +44,34 @@ class ProfileView extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       boxShadow: [
-                        avatarUrl != null ? BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 20.0,
-                          spreadRadius: 0.0,
-                          offset: Offset(0, 2),
-                        ) : const BoxShadow(color: Colors.transparent),
+                        avatarUrl != null
+                            ? BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 20.0,
+                                spreadRadius: 0.0,
+                                offset: Offset(0, 2),
+                              )
+                            : const BoxShadow(color: Colors.transparent),
                       ],
                     ),
                     child: SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: avatarUrl != null
-                          ? CircleAvatar(
-                              radius: 100,
-                              backgroundColor: Colors.transparent,
-                              backgroundImage: CachedNetworkImageProvider(
-                                avatarUrl!,
-                              ),
-                            )
-                          : const CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            child: Icon(Icons.account_circle_outlined ,size: 200,),
-                        )
-                    ),
+                        width: 200,
+                        height: 200,
+                        child: avatarUrl != null
+                            ? CircleAvatar(
+                                radius: 100,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: CachedNetworkImageProvider(
+                                  avatarUrl!,
+                                ),
+                              )
+                            : const CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                child: Icon(
+                                  Icons.account_circle_outlined,
+                                  size: 200,
+                                ),
+                              )),
                   ),
                 ),
               ),
@@ -270,7 +276,8 @@ class ProfileView extends StatelessWidget {
                           builder: (BuildContext dialogContext) {
                             return AlertDialog(
                               title: Text("Delete Account"),
-                              content: Text("Are you sure you want to permanently delete your account? This action cannot be undone."),
+                              content: Text(
+                                  "Are you sure you want to permanently delete your account? This action cannot be undone."),
                               actions: [
                                 TextButton(
                                   child: Text("Cancel"),
@@ -292,9 +299,41 @@ class ProfileView extends StatelessWidget {
                                       }
                                     } catch (e) {
                                       if (context.mounted) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text("Failed to delete account: ${e.toString()}")),
-                                        );
+                                        if (e
+                                            is ReauthenticationRequiredException) {
+                                          // Show the reauthentication dialog
+                                          final isGoogleSignIn =
+                                              provider.currentUser != null;
+                                          final success =
+                                              await showReauthenticationDialog(
+                                                  context, isGoogleSignIn);
+
+                                          // If reauthentication was successful, try deleting again
+                                          if (success && context.mounted) {
+                                            try {
+                                              await provider.deleteAccount();
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                              }
+                                            } catch (e) {
+                                              if (context.mounted) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                          "Failed to delete account: ${e.toString()}")),
+                                                );
+                                              }
+                                            }
+                                          }
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "Failed to delete account: ${e.toString()}")),
+                                          );
+                                        }
                                       }
                                     }
                                   },
