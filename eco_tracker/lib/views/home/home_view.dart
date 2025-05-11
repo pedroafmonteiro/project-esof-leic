@@ -1,5 +1,7 @@
 import 'package:eco_tracker/models/device_model.dart';
+import 'package:eco_tracker/models/graph_data_model.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
+import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/home/widgets/device_picker.dart';
@@ -11,43 +13,142 @@ import 'package:eco_tracker/services/tips_service.dart';
 class HomeView extends GeneralPage {
   HomeView({super.key})
       : super(title: 'Home', hasFAB: true, fabIcon: Icon(Icons.bolt));
-  final TipsService tipsService = TipsService();
+  final TipsService _tipsService = TipsService();
   final UsageService _usageService = UsageService();
+
+  static const _monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  @override
+  Future<void> onRefresh(BuildContext context) async {
+    return Provider.of<StatisticsViewModel>(context, listen: false)
+        .initializeData();
+  }
+
+  Widget _buildUsageSummaryCard(BuildContext context, MonthlyChartData data) {
+    final now = DateTime.now();
+    return Card(
+      child: ListTile(
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            '${_monthNames[now.month - 1]} ${now.year}',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+        ),
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Estimated Cost',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+                Text(
+                  '${data.totalCost} €',
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Total Usage',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+                Text(
+                  '${data.totalConsumption} kWh',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ],
+            ),
+          ],
+        ),
+        contentPadding: const EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTipOfTheDayCard(BuildContext context) {
+    return Card(
+      color: Theme.of(context).colorScheme.tertiaryContainer,
+      child: ListTile(
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Text(
+            'Tip of the Day',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onTertiaryContainer,
+                ),
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: FutureBuilder<String>(
+            future: _tipsService.getTodaysTip(),
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.hasData
+                    ? snapshot.data!
+                    : snapshot.hasError
+                        ? 'Could not load tip. Pull to refresh.'
+                        : 'No tip available',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
+                textAlign: TextAlign.center,
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget buildBody(BuildContext context) {
-    return FutureBuilder<String>(
-      future: tipsService.getTodaysTip(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
-          return Card(
-            color: Theme.of(context).colorScheme.tertiaryContainer,
-            child: ListTile(
-              title: Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                  'Tip of the Day',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                  snapshot.data!,
-                  style: Theme.of(context).textTheme.labelLarge,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          );
-        } else {
-          return Center(child: Text('No tip available'));
-        }
-      },
+    final statisticsViewModel = Provider.of<StatisticsViewModel>(context);
+
+    if (statisticsViewModel.monthlyUsage == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final data = MonthlyChartData.fromMonthlySummary(
+      statisticsViewModel.monthlyUsage!.dailyConsumption,
+      statisticsViewModel.selectedMonth,
+      statisticsViewModel.selectedMonthYear,
+    );
+
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        _buildUsageSummaryCard(context, data),
+        const SizedBox(height: 8.0),
+        _buildTipOfTheDayCard(context),
+      ],
     );
   }
 
