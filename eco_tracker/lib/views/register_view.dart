@@ -36,27 +36,29 @@ class _RegisterViewState extends State<RegisterView> {
     });
 
     try {
-      final authService = Provider.of<AuthenticationService>(context, listen: false);
-      
+      final authService =
+          Provider.of<AuthenticationService>(context, listen: false);
+
       bool isEmailRegistered = await authService.isEmailAlreadyRegistered(
         _emailController.text.trim(),
       );
-      
+
       if (isEmailRegistered) {
         setState(() {
-          _errorMessage = 'This email is already registered. Please sign in instead.';
+          _errorMessage =
+              'This email is already registered. Please sign in instead.';
           _isLoading = false;
         });
         return;
       }
-      
+
       await authService.registerWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      
+
       if (mounted) {
-        Navigator.of(context).pop(); 
+        Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
@@ -147,7 +149,8 @@ class _RegisterViewState extends State<RegisterView> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter an email';
                         }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value)) {
                           return 'Please enter a valid email address';
                         }
                         return null;
@@ -170,7 +173,9 @@ class _RegisterViewState extends State<RegisterView> {
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                            _obscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
                           onPressed: () {
                             setState(() {
@@ -202,7 +207,9 @@ class _RegisterViewState extends State<RegisterView> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                        _obscureConfirmPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {
@@ -228,14 +235,14 @@ class _RegisterViewState extends State<RegisterView> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                   ),
-                  child: _isLoading 
+                  child: _isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2.0),
                         )
                       : const Text('Register'),
-                ),              
+                ),
               ],
             ),
           ),

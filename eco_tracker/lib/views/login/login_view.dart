@@ -35,7 +35,8 @@ class _LoginViewState extends State<LoginView> {
     });
 
     try {
-      final authService = Provider.of<AuthenticationService>(context, listen: false);
+      final authService =
+          Provider.of<AuthenticationService>(context, listen: false);
       await authService.signInWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text.trim(),
@@ -52,19 +53,20 @@ class _LoginViewState extends State<LoginView> {
       }
     }
   }
-  
+
   void _resetPassword(BuildContext context) async {
     final email = _emailController.text.trim();
-    
+
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter your email address')),
       );
       return;
     }
-    
+
     try {
-      final authService = Provider.of<AuthenticationService>(context, listen: false);
+      final authService =
+          Provider.of<AuthenticationService>(context, listen: false);
       await authService.sendPasswordResetEmail(email);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Password reset email sent to $email')),
@@ -150,7 +152,8 @@ class _LoginViewState extends State<LoginView> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value)) {
                           return 'Please enter a valid email address';
                         }
                         return null;
@@ -173,7 +176,9 @@ class _LoginViewState extends State<LoginView> {
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                            _obscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
                           onPressed: () {
                             setState(() {
@@ -197,45 +202,51 @@ class _LoginViewState extends State<LoginView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed: _isLoading ? null : () => _resetPassword(context),
+                      onPressed:
+                          _isLoading ? null : () => _resetPassword(context),
                       child: const Text('Forgot Password?'),
                     ),
                     TextButton(
-                      onPressed: _isLoading ? null : () {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => 
-                                const RegisterView(),
-                            transitionsBuilder: (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
-                              return SharedAxisTransition(
-                                animation: animation,
-                                secondaryAnimation: secondaryAnimation,
-                                transitionType: SharedAxisTransitionType.horizontal,
-                                child: child,
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      const RegisterView(),
+                                  transitionsBuilder: (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    return SharedAxisTransition(
+                                      animation: animation,
+                                      secondaryAnimation: secondaryAnimation,
+                                      transitionType:
+                                          SharedAxisTransitionType.horizontal,
+                                      child: child,
+                                    );
+                                  },
+                                  transitionDuration:
+                                      const Duration(milliseconds: 300),
+                                ),
                               );
                             },
-                            transitionDuration: const Duration(milliseconds: 300),
-                          ),
-                        );
-                      },
                       child: const Text('Register'),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
-                  onPressed: _isLoading 
-                      ? null 
+                  onPressed: _isLoading
+                      ? null
                       : () => _signInWithEmailAndPassword(context),
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                   ),
-                  child: _isLoading 
+                  child: _isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
@@ -259,11 +270,12 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 const SizedBox(height: 24),
                 OutlinedButton.icon(
-                  onPressed: _isLoading 
-                      ? null 
+                  onPressed: _isLoading
+                      ? null
                       : () {
-                          final authService = Provider.of<AuthenticationService>(
-                            context, 
+                          final authService =
+                              Provider.of<AuthenticationService>(
+                            context,
                             listen: false,
                           );
                           authService.signIn();
