@@ -1,6 +1,8 @@
 import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../register_view.dart';
+
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -8,6 +10,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthenticationService>(context, listen: false);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: SafeArea(
@@ -83,23 +86,41 @@ class LoginView extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
+
+
                 OutlinedButton.icon(
-                  onPressed: () => authService.signIn(),
+                  onPressed: () {
+                    print("Google Sign-In pressed");
+                  },
                   icon: Image.asset(
                     'assets/google_logo.png',
                     height: 24,
                     width: 24,
-
                   ),
                   label: const Text('Continue with Google'),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
+                    backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.white,
                     foregroundColor: Colors.black87,
                     side: const BorderSide(color: Colors.black12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    textStyle: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
 
-                const SizedBox(height: 32),
+
+      const SizedBox(height: 32),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterView()),
+                    );
+                  },
+                  child: const Text("Don't have an account? Register here"),
+                ),
               ],
             ),
           ),
