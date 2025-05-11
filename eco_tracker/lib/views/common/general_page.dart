@@ -75,7 +75,10 @@ abstract class GeneralPage extends StatelessWidget {
                               provider.cachedAvatarUrl!,
                             ),
                           )
-                        : CircleAvatar(backgroundColor: Colors.transparent),
+                        : const CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            child: Icon(Icons.account_circle_outlined),
+                        )
                   ),
                 ),
               );

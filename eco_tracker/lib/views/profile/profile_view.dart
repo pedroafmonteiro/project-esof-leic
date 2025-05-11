@@ -42,12 +42,12 @@ class ProfileView extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       boxShadow: [
-                        BoxShadow(
+                        avatarUrl != null ? BoxShadow(
                           color: Colors.black26,
                           blurRadius: 20.0,
                           spreadRadius: 0.0,
                           offset: Offset(0, 2),
-                        ),
+                        ) : const BoxShadow(color: Colors.transparent),
                       ],
                     ),
                     child: SizedBox(
@@ -61,9 +61,10 @@ class ProfileView extends StatelessWidget {
                                 avatarUrl!,
                               ),
                             )
-                          : CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                            ),
+                          : const CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            child: Icon(Icons.account_circle_outlined ,size: 200,),
+                        )
                     ),
                   ),
                 ),
