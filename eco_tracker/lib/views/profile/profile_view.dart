@@ -9,6 +9,18 @@ class ProfileView extends StatelessWidget {
 
   final String? avatarUrl;
 
+  // Predefined color options
+  static const List<ColorOption> colorOptions = [
+    ColorOption(name: 'Red', color: Colors.red),
+    ColorOption(name: 'Orange', color: Colors.orange),
+    ColorOption(name: 'Yellow', color: Colors.yellow),
+    ColorOption(name: 'Green', color: Colors.green),
+    ColorOption(name: 'Cyan', color: Colors.cyan),
+    ColorOption(name: 'Blue', color: Colors.blue),
+    ColorOption(name: 'Purple', color: Colors.purple),
+    ColorOption(name: 'Pink', color: Colors.pink),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final settingsService = Provider.of<SettingsService>(context);
@@ -161,6 +173,118 @@ class ProfileView extends StatelessWidget {
                         ),
                       ],
                     ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Text(
+                          "Material You",
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        Spacer(),
+                        Switch(
+                          value: settingsService.materialYou,
+                          onChanged: (value) {
+                            settingsService.setMaterialYou(value);
+                          },
+                        ),
+                      ],
+                    ),
+                    if (!settingsService.materialYou) ...[
+                      SizedBox(height: 16.0),
+                      Row(
+                        children: [
+                          Text(
+                            "Accent color",
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              // Show color selection dialog
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Select accent color'),
+                                    content: Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      alignment: WrapAlignment.center,
+                                      children: SettingsService.predefinedColors
+                                          .map((option) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            settingsService
+                                                .setAccentColor(option.color);
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Container(
+                                            width: 60,
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                              color: option.color,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: settingsService
+                                                            .accentColor ==
+                                                        option.color
+                                                    ? Colors.white
+                                                    : Colors.transparent,
+                                                width: 2,
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  blurRadius: 5,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child:
+                                                settingsService.accentColor ==
+                                                        option.color
+                                                    ? Icon(
+                                                        Icons.check,
+                                                        color: Colors.white,
+                                                      )
+                                                    : null,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: settingsService.accentColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8.0),
+                    ],
                   ],
                 ),
               ),
@@ -188,4 +312,11 @@ class ProfileView extends StatelessWidget {
       ),
     );
   }
+}
+
+class ColorOption {
+  final String name;
+  final Color color;
+
+  const ColorOption({required this.name, required this.color});
 }

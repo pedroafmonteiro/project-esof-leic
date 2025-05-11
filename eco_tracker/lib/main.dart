@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eco_tracker/firebase_options.dart';
 import 'package:eco_tracker/services/authentication_service.dart';
 import 'package:eco_tracker/services/settings_service.dart';
@@ -61,37 +62,74 @@ class MainApp extends StatelessWidget {
     final settingsService = Provider.of<SettingsService>(context);
 
     authService.getUserAvatar();
-    return MaterialApp(
-      routes: {
-        '/devices': (context) => DevicesView(),
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        ColorScheme lightColorScheme;
+        ColorScheme darkColorScheme;
+
+        // Check if we should use Material You (dynamic colors) and if they're available
+        if (settingsService.materialYou &&
+            lightDynamic != null &&
+            darkDynamic != null) {
+          // Extract and map primary color to the closest predefined color
+          Color mappedLightColor =
+              SettingsService.findClosestPredefinedColor(lightDynamic.primary);
+          Color mappedDarkColor =
+              SettingsService.findClosestPredefinedColor(darkDynamic.primary);
+
+          // Create new color schemes using the mapped colors
+          lightColorScheme = ColorScheme.fromSeed(
+            brightness: Brightness.light,
+            seedColor: mappedLightColor,
+          );
+          darkColorScheme = ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: mappedDarkColor,
+          );
+        } else {
+          // If dynamic colors aren't available or turned off, use our configured accent color
+          Color seedColor = settingsService.accentColor;
+
+          lightColorScheme = ColorScheme.fromSeed(
+            brightness: Brightness.light,
+            seedColor: seedColor,
+          );
+          darkColorScheme = ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: seedColor,
+          );
+        }
+
+        return MaterialApp(
+          routes: {
+            '/devices': (context) => DevicesView(),
+          },
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: lightColorScheme,
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: darkColorScheme,
+            useMaterial3: true,
+          ),
+          themeMode:
+              settingsService.darkMode ? ThemeMode.dark : ThemeMode.light,
+          home: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  snapshot.connectionState == ConnectionState.none) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasData) {
+                return NavigationView();
+              } else {
+                return LoginView();
+              }
+            },
+          ),
+        );
       },
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.light,
-          seedColor: Colors.green,
-        ),
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: Colors.green,
-        ),
-      ),
-      themeMode: settingsService.darkMode ? ThemeMode.dark : ThemeMode.light,
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              snapshot.connectionState == ConnectionState.none) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasData) {
-            return NavigationView();
-          } else {
-            return LoginView();
-          }
-        },
-      ),
     );
   }
 }
