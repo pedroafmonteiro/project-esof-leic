@@ -55,23 +55,24 @@ class ProfileView extends StatelessWidget {
                       ],
                     ),
                     child: SizedBox(
-                        width: 200,
-                        height: 200,
-                        child: avatarUrl != null
-                            ? CircleAvatar(
-                                radius: 100,
-                                backgroundColor: Colors.transparent,
-                                backgroundImage: CachedNetworkImageProvider(
-                                  avatarUrl!,
-                                ),
-                              )
-                            : const CircleAvatar(
-                                backgroundColor: Colors.transparent,
-                                child: Icon(
-                                  Icons.account_circle_outlined,
-                                  size: 200,
-                                ),
-                              ),),
+                      width: 200,
+                      height: 200,
+                      child: avatarUrl != null
+                          ? CircleAvatar(
+                              radius: 100,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: CachedNetworkImageProvider(
+                                avatarUrl!,
+                              ),
+                            )
+                          : const CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              child: Icon(
+                                Icons.account_circle_outlined,
+                                size: 200,
+                              ),
+                            ),
+                    ),
                   ),
                 ),
               ),
@@ -201,7 +202,7 @@ class ProfileView extends StatelessWidget {
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black
-                                                      .withOpacity(0.2),
+                                                      .withAlpha(51),
                                                   blurRadius: 5,
                                                   offset: Offset(0, 2),
                                                 ),
@@ -277,7 +278,8 @@ class ProfileView extends StatelessWidget {
                             return AlertDialog(
                               title: Text("Delete Account"),
                               content: Text(
-                                  "Are you sure you want to permanently delete your account? This action cannot be undone.",),
+                                "Are you sure you want to permanently delete your account? This action cannot be undone.",
+                              ),
                               actions: [
                                 TextButton(
                                   child: Text("Cancel"),
@@ -306,7 +308,9 @@ class ProfileView extends StatelessWidget {
                                               provider.currentUser != null;
                                           final success =
                                               await showReauthenticationDialog(
-                                                  context, isGoogleSignIn,);
+                                            context,
+                                            isGoogleSignIn,
+                                          );
 
                                           // If reauthentication was successful, try deleting again
                                           if (success && context.mounted) {
@@ -320,8 +324,10 @@ class ProfileView extends StatelessWidget {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
-                                                      content: Text(
-                                                          "Failed to delete account: ${e.toString()}",),),
+                                                    content: Text(
+                                                      "Failed to delete account: ${e.toString()}",
+                                                    ),
+                                                  ),
                                                 );
                                               }
                                             }
@@ -330,8 +336,10 @@ class ProfileView extends StatelessWidget {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(
-                                                content: Text(
-                                                    "Failed to delete account: ${e.toString()}",),),
+                                              content: Text(
+                                                "Failed to delete account: ${e.toString()}",
+                                              ),
+                                            ),
                                           );
                                         }
                                       }
