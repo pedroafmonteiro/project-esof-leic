@@ -213,7 +213,7 @@ class _LoginViewState extends State<LoginView> {
                               Navigator.of(context).push(
                                 PageRouteBuilder(
                                   pageBuilder: (context, animation,
-                                          secondaryAnimation) =>
+                                          secondaryAnimation,) =>
                                       const RegisterView(),
                                   transitionsBuilder: (
                                     context,

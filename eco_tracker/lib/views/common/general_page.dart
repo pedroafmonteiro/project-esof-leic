@@ -78,7 +78,7 @@ abstract class GeneralPage extends StatelessWidget {
                           : const CircleAvatar(
                               backgroundColor: Colors.transparent,
                               child: Icon(Icons.account_circle_outlined),
-                            )),
+                            ),),
                 ),
               );
             },

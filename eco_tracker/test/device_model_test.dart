@@ -9,7 +9,7 @@ void main() {
           model: 'Model A',
           manufacturer: 'Manufacturer A',
           category: 'Category A',
-          powerConsumption: 100);
+          powerConsumption: 100,);
 
       expect(device.id, '1');
       expect(device.model, 'Model A');
@@ -42,7 +42,7 @@ void main() {
           model: 'Model A',
           manufacturer: 'Manufacturer A',
           category: 'Category A',
-          powerConsumption: 100);
+          powerConsumption: 100,);
       final updatedDevice = device.copyWith(model: 'Updated Model');
 
       expect(updatedDevice.id, '1');

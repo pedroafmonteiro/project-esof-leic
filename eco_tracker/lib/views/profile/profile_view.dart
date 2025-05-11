@@ -71,7 +71,7 @@ class ProfileView extends StatelessWidget {
                                   Icons.account_circle_outlined,
                                   size: 200,
                                 ),
-                              )),
+                              ),),
                   ),
                 ),
               ),
@@ -277,7 +277,7 @@ class ProfileView extends StatelessWidget {
                             return AlertDialog(
                               title: Text("Delete Account"),
                               content: Text(
-                                  "Are you sure you want to permanently delete your account? This action cannot be undone."),
+                                  "Are you sure you want to permanently delete your account? This action cannot be undone.",),
                               actions: [
                                 TextButton(
                                   child: Text("Cancel"),
@@ -306,7 +306,7 @@ class ProfileView extends StatelessWidget {
                                               provider.currentUser != null;
                                           final success =
                                               await showReauthenticationDialog(
-                                                  context, isGoogleSignIn);
+                                                  context, isGoogleSignIn,);
 
                                           // If reauthentication was successful, try deleting again
                                           if (success && context.mounted) {
@@ -321,7 +321,7 @@ class ProfileView extends StatelessWidget {
                                                     .showSnackBar(
                                                   SnackBar(
                                                       content: Text(
-                                                          "Failed to delete account: ${e.toString()}")),
+                                                          "Failed to delete account: ${e.toString()}",),),
                                                 );
                                               }
                                             }
@@ -331,7 +331,7 @@ class ProfileView extends StatelessWidget {
                                               .showSnackBar(
                                             SnackBar(
                                                 content: Text(
-                                                    "Failed to delete account: ${e.toString()}")),
+                                                    "Failed to delete account: ${e.toString()}",),),
                                           );
                                         }
                                       }
