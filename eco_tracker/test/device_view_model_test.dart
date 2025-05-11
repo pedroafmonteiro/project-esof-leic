@@ -118,13 +118,15 @@ void main() {
           .thenAnswer((_) async => [updatedDevice]);
 
       // Initial state
-      deviceViewModel.devices.add(Device(
-        id: 'device1',
-        model: 'EcoSensor',
-        manufacturer: 'EcoTech',
-        category: 'Sensor',
-        powerConsumption: 5,
-      ),);
+      deviceViewModel.devices.add(
+        Device(
+          id: 'device1',
+          model: 'EcoSensor',
+          manufacturer: 'EcoTech',
+          category: 'Sensor',
+          powerConsumption: 5,
+        ),
+      );
 
       // Call the method under test
       await deviceViewModel.updateDevice(updatedDevice);
