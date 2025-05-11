@@ -79,8 +79,9 @@ class NavigationViewState extends State<NavigationView> {
       case 1:
         final view = StatisticsView(key: ValueKey<int>(1));
         if (pendingStatisticsTabIndex != null) {
-          Future.microtask(() {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             StatisticsView.navigateToTab(pendingStatisticsTabIndex!);
+            pendingStatisticsTabIndex = null;
           });
         }
         return view;

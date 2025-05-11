@@ -9,14 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class StatisticsView extends StatefulWidget {
-  static final GlobalKey<StatisticsViewState> statisticsKey =
-      GlobalKey<StatisticsViewState>();
+  static StatisticsViewState? _currentState;
 
   static void navigateToTab(int index) {
-    statisticsKey.currentState?.setSelectedIndex(index);
+    _currentState?.setSelectedIndex(index);
   }
 
-  StatisticsView({Key? key}) : super(key: statisticsKey);
+  const StatisticsView({super.key});
 
   @override
   State<StatisticsView> createState() => StatisticsViewState();
@@ -24,6 +23,20 @@ class StatisticsView extends StatefulWidget {
 
 class StatisticsViewState extends State<StatisticsView> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    StatisticsView._currentState = this;
+  }
+
+  @override
+  void dispose() {
+    if (StatisticsView._currentState == this) {
+      StatisticsView._currentState = null;
+    }
+    super.dispose();
+  }
 
   void setSelectedIndex(int index) {
     if (index >= 0 && index <= 3) {
