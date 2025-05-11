@@ -16,36 +16,56 @@ class LoginView extends StatelessWidget {
       appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.eco,
-                size: 80,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Welcome to EcoTracker',
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
+              Hero(
+                tag: 'app-logo',
+                child: Icon(
+                  Icons.eco,
+                  size: 80,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(height: 16),
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
+              Hero(
+                tag: 'welcome-text',
+                child: Material(
+                  color: Colors.transparent,
+                  child: Text(
+                    'Welcome to EcoTracker',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              Hero(
+                tag: 'email-field',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Hero(
+                tag: 'password-field',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
