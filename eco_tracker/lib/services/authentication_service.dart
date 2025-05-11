@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eco_tracker/services/exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -124,7 +125,9 @@ class AuthenticationService with ChangeNotifier {
       notifyListeners();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {
-        throw 'Please sign in again before deleting your account for security reasons.';
+        throw ReauthenticationRequiredException(
+          'Please sign in again before deleting your account for security reasons.',
+        );
       } else {
         throw Exception('Failed to delete account: ${e.message}');
       }
