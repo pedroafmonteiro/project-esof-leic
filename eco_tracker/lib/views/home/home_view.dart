@@ -1,9 +1,14 @@
 import 'package:eco_tracker/models/device_model.dart';
+import 'package:eco_tracker/models/graph_data_model.dart';
+import 'package:eco_tracker/services/device_service.dart';
+import 'package:eco_tracker/services/settings_service.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
+import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
 import 'package:eco_tracker/views/common/general_bottom_sheet.dart';
 import 'package:eco_tracker/views/home/widgets/device_picker.dart';
 import 'package:eco_tracker/services/usage_service.dart';
+import 'package:eco_tracker/views/navigation/navigation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eco_tracker/services/tips_service.dart';
@@ -11,43 +16,372 @@ import 'package:eco_tracker/services/tips_service.dart';
 class HomeView extends GeneralPage {
   HomeView({super.key})
       : super(title: 'Home', hasFAB: true, fabIcon: Icon(Icons.bolt));
-  final TipsService tipsService = TipsService();
+  final TipsService _tipsService = TipsService();
   final UsageService _usageService = UsageService();
 
+  static const _monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
   @override
-  Widget buildBody(BuildContext context) {
-    return FutureBuilder<String>(
-      future: tipsService.getTodaysTip(),
+  Future<void> onRefresh(BuildContext context) async {
+    return Provider.of<StatisticsViewModel>(context, listen: false)
+        .initializeData();
+  }
+
+  Widget _buildUsageSummaryCard(BuildContext context, MonthlyChartData data) {
+    final now = DateTime.now();
+    return GestureDetector(
+      onTap: () {
+        NavigationView.navigateTo(1, statisticsTabIndex: 2);
+      },
+      child: Card(
+        child: ListTile(
+          title: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              '${_monthNames[now.month - 1]} ${now.year}',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+          ),
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Estimated Cost',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                  Text(
+                    '${data.totalCost.toStringAsFixed(2)} €',
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Total Usage',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
+                  Text(
+                    '${data.totalConsumption.toStringAsFixed(2)} kWh',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          contentPadding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopThreeCard(BuildContext context, MonthlyChartData data) {
+    final statisticsViewModel = Provider.of<StatisticsViewModel>(context);
+    final monthlyUsage = statisticsViewModel.monthlyUsage;
+
+    if (monthlyUsage == null || monthlyUsage.deviceConsumption.isEmpty) {
+      return GestureDetector(
+        onTap: () {
+          NavigationView.navigateTo(1, statisticsTabIndex: 2);
+        },
+        child: Card(
+          child: ListTile(
+            title: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                'Top energy consumers',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
+            subtitle: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Text(
+                  'No device usage data available',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final deviceConsumptionList = monthlyUsage.deviceConsumption.entries
+        .toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    final topDevices = deviceConsumptionList.take(3).toList();
+
+    return FutureBuilder<List<String>>(
+      future: _getDeviceNames(topDevices.map((e) => e.key).toList()),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (snapshot.hasData) {
-          return Card(
-            color: Theme.of(context).colorScheme.tertiaryContainer,
+        List<String> deviceNames = [];
+
+        if (snapshot.hasData) {
+          deviceNames = snapshot.data!;
+        } else {
+          deviceNames = List.generate(
+            topDevices.length,
+            (index) => 'Device ${index + 1}',
+          );
+        }
+
+        return GestureDetector(
+          onTap: () {
+            NavigationView.navigateTo(1, statisticsTabIndex: 2);
+          },
+          child: Card(
             child: ListTile(
               title: Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
-                  'Tip of the Day',
+                  'Top energy consumers',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                  snapshot.data!,
-                  style: Theme.of(context).textTheme.labelLarge,
-                  textAlign: TextAlign.center,
-                ),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < topDevices.length; i++)
+                          Text(
+                            deviceNames[i],
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        for (var device in topDevices)
+                          Text(
+                            '${device.value.toStringAsFixed(2)} kWh',
+                            style: Theme.of(context).textTheme.labelLarge,
+                            textAlign: TextAlign.right,
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              contentPadding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                bottom: 16.0,
+                top: 8.0,
               ),
             ),
-          );
-        } else {
-          return Center(child: Text('No tip available'));
-        }
+          ),
+        );
       },
+    );
+  }
+
+  Future<List<String>> _getDeviceNames(List<String> deviceIds) async {
+    final deviceService = DeviceService();
+    List<String> deviceNames = [];
+
+    for (String id in deviceIds) {
+      final device = await deviceService.getDeviceById(id);
+      if (device != null) {
+        deviceNames.add('${device.manufacturer} ${device.model}');
+      } else {
+        deviceNames.add('Unknown Device');
+      }
+    }
+
+    return deviceNames;
+  }
+
+  Widget _buildTipOfTheDayCard(BuildContext context) {
+    return Card(
+      color: Theme.of(context).colorScheme.tertiaryContainer,
+      child: ListTile(
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Text(
+            'Tip of the Day',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onTertiaryContainer,
+                ),
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: FutureBuilder<String>(
+            future: _tipsService.getTodaysTip(),
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.hasData
+                    ? snapshot.data!
+                    : snapshot.hasError
+                        ? 'Could not load tip. Pull to refresh.'
+                        : 'No tip available',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
+                textAlign: TextAlign.center,
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEnvironmentalImpactCard(
+    BuildContext context,
+    MonthlyChartData data,
+  ) {
+    final carbonFootprint = data.totalConsumption * 0.4;
+
+    final treesNeeded = (carbonFootprint / 21.0 * 12.0).round();
+
+    return Card(
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      child: ListTile(
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Text(
+            'Environmental Impact',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                ),
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.co2,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    'Carbon Footprint:',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${carbonFootprint.toStringAsFixed(2)} kg CO₂',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                children: [
+                  Icon(
+                    Icons.forest,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    'Trees to Offset (yearly):',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '$treesNeeded trees',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildBody(BuildContext context) {
+    final statisticsViewModel = Provider.of<StatisticsViewModel>(context);
+    final settingsService = Provider.of<SettingsService>(context);
+
+    if (statisticsViewModel.monthlyUsage == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final data = MonthlyChartData.fromMonthlySummary(
+      statisticsViewModel.monthlyUsage!.dailyConsumption,
+      statisticsViewModel.selectedMonth,
+      statisticsViewModel.selectedMonthYear,
+      settingsService.energyCost,
+    );
+
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        _buildUsageSummaryCard(context, data),
+        const SizedBox(height: 8.0),
+        _buildTopThreeCard(context, data),
+        const SizedBox(height: 8.0),
+        _buildTipOfTheDayCard(context),
+        const SizedBox(height: 8.0),
+        _buildEnvironmentalImpactCard(context, data),
+        const SizedBox(height: 72.0),
+      ],
     );
   }
 

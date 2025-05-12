@@ -5,14 +5,32 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 
 class NavigationView extends StatefulWidget {
-  const NavigationView({super.key});
+  static final GlobalKey<NavigationViewState> navigatorKey =
+      GlobalKey<NavigationViewState>();
+
+  static void navigateTo(int index, {int? statisticsTabIndex}) {
+    navigatorKey.currentState
+        ?.changePage(index, statisticsTabIndex: statisticsTabIndex);
+  }
+
+  NavigationView({Key? key}) : super(key: navigatorKey);
 
   @override
-  State<NavigationView> createState() => _NavigationViewState();
+  State<NavigationView> createState() => NavigationViewState();
 }
 
-class _NavigationViewState extends State<NavigationView> {
+class NavigationViewState extends State<NavigationView> {
   int currentPageIndex = 0;
+  int? pendingStatisticsTabIndex;
+
+  void changePage(int index, {int? statisticsTabIndex}) {
+    if (index >= 0 && index <= 2) {
+      setState(() {
+        currentPageIndex = index;
+        pendingStatisticsTabIndex = statisticsTabIndex;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +77,14 @@ class _NavigationViewState extends State<NavigationView> {
       case 0:
         return HomeView(key: ValueKey<int>(0));
       case 1:
-        return StatisticsView(key: ValueKey<int>(1));
+        final view = StatisticsView(key: ValueKey<int>(1));
+        if (pendingStatisticsTabIndex != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            StatisticsView.navigateToTab(pendingStatisticsTabIndex!);
+            pendingStatisticsTabIndex = null;
+          });
+        }
+        return view;
       case 2:
         return DevicesView(key: ValueKey<int>(2));
       default:

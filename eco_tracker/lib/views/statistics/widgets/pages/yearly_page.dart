@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eco_tracker/services/settings_service.dart';
 
-
 class YearlyView extends StatelessWidget {
   const YearlyView({super.key});
 
@@ -33,10 +32,11 @@ class YearlyView extends StatelessWidget {
       return const Center(child: Text('No data available for this year.'));
     }
 
-    final energyCost = Provider.of<SettingsService>(context, listen: false).energyCost;
+    final energyCost =
+        Provider.of<SettingsService>(context, listen: false).energyCost;
 
-    final chartData =
-    YearlyChartData.fromYearlySummary(yearlyUsage.monthlyConsumption, energyCost);
+    final chartData = YearlyChartData.fromYearlySummary(
+        yearlyUsage.monthlyConsumption, energyCost);
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -93,9 +93,9 @@ class YearlyView extends StatelessWidget {
   }
 
   Future<void> _selectYear(
-      BuildContext context,
-      StatisticsViewModel viewModel,
-      ) async {
+    BuildContext context,
+    StatisticsViewModel viewModel,
+  ) async {
     final currentYear = viewModel.selectedYear;
 
     showDialog(

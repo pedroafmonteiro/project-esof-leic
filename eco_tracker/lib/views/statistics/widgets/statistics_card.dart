@@ -20,14 +20,21 @@ class StatisticsCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: Theme.of(context).textTheme.titleSmall),
+            Expanded(
+              flex: 3,
+              child: Text(title, style: Theme.of(context).textTheme.titleSmall),
+            ),
             const SizedBox(height: 8),
-            Text(
-              '${data.toStringAsFixed(2)} $extension',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                '${data.toStringAsFixed(2)} $extension',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                textAlign: TextAlign.right,
+              ),
             ),
           ],
         ),

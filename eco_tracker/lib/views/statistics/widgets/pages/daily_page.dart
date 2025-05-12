@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:eco_tracker/services/settings_service.dart';
 
-
 class DailyView extends StatelessWidget {
   const DailyView({super.key});
 
@@ -28,86 +27,82 @@ class DailyView extends StatelessWidget {
       );
     }
     return Consumer<SettingsService>(
-      builder: (context, settingsService, _)
-    {
-      final double usageKwh = dailyUsage?.totalKwh ?? 0;
-      final double costEuros = usageKwh * settingsService.energyCost;
+      builder: (context, settingsService, _) {
+        final double usageKwh = dailyUsage?.totalKwh ?? 0;
+        final double costEuros = usageKwh * settingsService.energyCost;
 
-
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            child: Column(
-              spacing: 8.0,
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () => _selectDate(context, viewModel),
-                    child: Text(
-                      DateFormat('MMM dd, yyyy').format(viewModel.selectedDate),
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .titleSmall,
-                    ),
-                  ),
-                ),
-                StatisticsCard(
-                  data: usageKwh,
-                  title: 'Daily Usage',
-                  extension: 'kWh',
-                ),
-                StatisticsCard(
-                  data: costEuros,
-                  title: 'Daily Cost',
-                  extension: '€',
-                ),
-                if (dailyUsage != null &&
-                    dailyUsage.deviceConsumption.isNotEmpty)
-                  TopConsumers(
-                    deviceConsumption: dailyUsage.deviceConsumption,
-                  ),
-                if (dailyUsage == null || dailyUsage.deviceConsumption.isEmpty)
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.4,
-                    ),
-                    child: const Center(
+        return ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+              child: Column(
+                spacing: 8.0,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: () => _selectDate(context, viewModel),
                       child: Text(
-                        'No device usage data recorded for this day.',
-                        textAlign: TextAlign.center,
+                        DateFormat('MMM dd, yyyy')
+                            .format(viewModel.selectedDate),
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
                   ),
-                SizedBox(height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.1),
-              ],
+                  StatisticsCard(
+                    data: usageKwh,
+                    title: 'Daily Usage',
+                    extension: 'kWh',
+                  ),
+                  StatisticsCard(
+                    data: costEuros,
+                    title: 'Daily Cost',
+                    extension: '€',
+                  ),
+                  if (dailyUsage != null &&
+                      dailyUsage.deviceConsumption.isNotEmpty)
+                    TopConsumers(
+                      deviceConsumption: dailyUsage.deviceConsumption,
+                    ),
+                  if (dailyUsage == null ||
+                      dailyUsage.deviceConsumption.isEmpty)
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height * 0.4,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'No device usage data recorded for this day.',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      );
-    });}
-}
-  Future<void> _selectDate(
-      BuildContext context,
-      StatisticsViewModel viewModel,
-      ) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: viewModel.selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
+          ],
+        );
+      },
     );
-
-    if (picked != null && picked != viewModel.selectedDate) {
-      viewModel.changeSelectedDate(picked);
-    }
   }
+}
+
+Future<void> _selectDate(
+  BuildContext context,
+  StatisticsViewModel viewModel,
+) async {
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: viewModel.selectedDate,
+    firstDate: DateTime(2020),
+    lastDate: DateTime.now(),
+  );
+
+  if (picked != null && picked != viewModel.selectedDate) {
+    viewModel.changeSelectedDate(picked);
+  }
+}

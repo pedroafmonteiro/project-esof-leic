@@ -66,7 +66,14 @@ class TopConsumers extends StatelessWidget {
   }
 
   Future<String> _getDeviceName(String deviceId) async {
-    final device = await DeviceService().getDeviceById(deviceId);
-    return '${device?.manufacturer} ${device?.model}';
+    try {
+      final device = await DeviceService().getDeviceById(deviceId);
+      return device != null
+          ? '${device.manufacturer} ${device.model}'
+          : 'Unknown Device';
+    } catch (e) {
+      debugPrint('Error fetching device name: $e');
+      return 'Unknown Device';
+    }
   }
 }

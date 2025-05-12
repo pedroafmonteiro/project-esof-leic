@@ -69,7 +69,7 @@ class CommonGraph extends StatelessWidget {
                 },
                 getTooltipItems: (touchedSpots) {
                   return touchedSpots.map((touchedSpot) {
-                    final y = touchedSpot.y;
+                    final y = touchedSpot.y.toStringAsFixed(2);
                     return LineTooltipItem(
                       '$y $tooltipSuffix',
                       Theme.of(context).textTheme.bodyMedium?.copyWith(
