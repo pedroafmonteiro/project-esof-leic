@@ -159,7 +159,7 @@ class HomeView extends GeneralPage {
           child: Card(
             child: ListTile(
               title: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.only(bottom: 16.0),
                 child: Text(
                   'Top energy consumers',
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -270,6 +270,90 @@ class HomeView extends GeneralPage {
     );
   }
 
+  Widget _buildEnvironmentalImpactCard(
+    BuildContext context,
+    MonthlyChartData data,
+  ) {
+    final carbonFootprint = data.totalConsumption * 0.4;
+
+    final treesNeeded = (carbonFootprint / 21.0 * 12.0).round();
+
+    return Card(
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      child: ListTile(
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Text(
+            'Environmental Impact',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                ),
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.co2,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    'Carbon Footprint:',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${carbonFootprint.toStringAsFixed(2)} kg CO₂',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                children: [
+                  Icon(
+                    Icons.forest,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    'Trees to Offset (yearly):',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '$treesNeeded trees',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget buildBody(BuildContext context) {
     final statisticsViewModel = Provider.of<StatisticsViewModel>(context);
@@ -294,6 +378,9 @@ class HomeView extends GeneralPage {
         _buildTopThreeCard(context, data),
         const SizedBox(height: 8.0),
         _buildTipOfTheDayCard(context),
+        const SizedBox(height: 8.0),
+        _buildEnvironmentalImpactCard(context, data),
+        const SizedBox(height: 72.0),
       ],
     );
   }
