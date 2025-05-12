@@ -5,10 +5,13 @@ class SettingsManager {
   static bool? _darkMode;
   static bool? _materialYou;
   static int? _accentColor;
+  static double? _energyCost;
+
 
   static bool get darkMode => _darkMode ?? false;
   static bool get materialYou => _materialYou ?? false;
   static Color get accentColor => Color(_accentColor ?? Colors.green.value);
+  static double get energyCost => _energyCost ?? 0.15;
 
   static Future<void> preloadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -23,6 +26,8 @@ class SettingsService extends ChangeNotifier {
   static const String _darkModeKey = 'darkMode';
   static const String _materialYouKey = 'materialYou';
   static const String _accentColorKey = 'accentColor';
+  static const String _energyCostKey = 'energyCost';
+
 
   static const List<PredefinedColor> predefinedColors = [
     PredefinedColor(name: 'Red', color: Colors.red),
@@ -39,6 +44,9 @@ class SettingsService extends ChangeNotifier {
   bool _materialYou = false;
   Color _accentColor = Colors.green;
 
+  double _energyCost = 0.15;
+  double get energyCost => _energyCost;
+
   bool get darkMode => _darkMode;
   bool get materialYou => _materialYou;
   Color get accentColor => _accentColor;
@@ -47,6 +55,7 @@ class SettingsService extends ChangeNotifier {
     _darkMode = SettingsManager.darkMode;
     _materialYou = SettingsManager.materialYou;
     _accentColor = SettingsManager.accentColor;
+    _energyCost = SettingsManager.energyCost;
     _loadSettings();
   }
 
@@ -79,6 +88,9 @@ class SettingsService extends ChangeNotifier {
     _materialYou = prefs.getBool(_materialYouKey) ?? false;
     _accentColor = Color(prefs.getInt(_accentColorKey) ?? Colors.green.value);
     notifyListeners();
+    _energyCost = prefs.getDouble('energyCost') ?? 0.15;
+    notifyListeners();
+
   }
 
   Future<void> setDarkMode(bool value) async {
@@ -107,6 +119,12 @@ class SettingsService extends ChangeNotifier {
     await prefs.setInt(_accentColorKey, color.value);
     notifyListeners();
   }
+  Future<void> setEnergyCost(double newCost) async {
+    _energyCost = newCost;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('energyCost', newCost);
+    notifyListeners();
+  }
 }
 
 class PredefinedColor {
@@ -115,3 +133,4 @@ class PredefinedColor {
 
   const PredefinedColor({required this.name, required this.color});
 }
+
