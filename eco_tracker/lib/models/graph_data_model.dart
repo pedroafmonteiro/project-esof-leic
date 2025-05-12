@@ -18,7 +18,7 @@ class WeeklyChartData {
     required this.totalCost,
   });
 
-  factory WeeklyChartData.fromWeeklySummary(Map<int, double> dailyData) {
+  factory WeeklyChartData.fromWeeklySummary(Map<int, double> dailyData, double energyCost) {
     final dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     List<ChartPoint> points = [];
@@ -42,7 +42,7 @@ class WeeklyChartData {
       points: points,
       maxValue: maxVal > 0 ? maxVal : 1.0,
       totalConsumption: total,
-      totalCost: total * 0.15,
+      totalCost: total * energyCost,
     );
   }
 }
@@ -63,10 +63,11 @@ class MonthlyChartData {
   });
 
   factory MonthlyChartData.fromMonthlySummary(
-    Map<int, double> dailyData,
-    int month,
-    int year,
-  ) {
+      Map<int, double> dailyData,
+      int month,
+      int year,
+      double energyCost
+      ) {
     final daysInMonth = DateTime(year, month + 1, 0).day;
 
     List<ChartPoint> points = [];
@@ -90,7 +91,7 @@ class MonthlyChartData {
       points: points,
       maxValue: maxVal > 0 ? maxVal : 1.0,
       totalConsumption: total,
-      totalCost: total * 0.15,
+      totalCost: total * energyCost,
       daysInMonth: daysInMonth,
     );
   }
@@ -109,7 +110,7 @@ class YearlyChartData {
     required this.totalCost,
   });
 
-  factory YearlyChartData.fromYearlySummary(Map<int, double> monthlyData) {
+  factory YearlyChartData.fromYearlySummary(Map<int, double> monthlyData, double energyCost) {
     final monthNames = [
       'Jan',
       'Feb',
@@ -146,7 +147,7 @@ class YearlyChartData {
       points: points,
       maxValue: maxVal > 0 ? maxVal : 1.0,
       totalConsumption: total,
-      totalCost: total * 0.15,
+      totalCost: total * energyCost,
     );
   }
 }
