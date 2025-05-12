@@ -1,6 +1,7 @@
 import 'package:eco_tracker/models/device_model.dart';
 import 'package:eco_tracker/models/graph_data_model.dart';
 import 'package:eco_tracker/services/device_service.dart';
+import 'package:eco_tracker/services/settings_service.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
 import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
@@ -131,7 +132,8 @@ class HomeView extends GeneralPage {
       );
     }
 
-    final deviceConsumptionList = monthlyUsage.deviceConsumption.entries.toList()
+    final deviceConsumptionList = monthlyUsage.deviceConsumption.entries
+        .toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     final topDevices = deviceConsumptionList.take(3).toList();
@@ -174,8 +176,12 @@ class HomeView extends GeneralPage {
                         for (int i = 0; i < topDevices.length; i++)
                           Text(
                             deviceNames[i],
-                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -267,6 +273,7 @@ class HomeView extends GeneralPage {
   @override
   Widget buildBody(BuildContext context) {
     final statisticsViewModel = Provider.of<StatisticsViewModel>(context);
+    final settingsService = Provider.of<SettingsService>(context);
 
     if (statisticsViewModel.monthlyUsage == null) {
       return const Center(child: CircularProgressIndicator());
@@ -276,6 +283,7 @@ class HomeView extends GeneralPage {
       statisticsViewModel.monthlyUsage!.dailyConsumption,
       statisticsViewModel.selectedMonth,
       statisticsViewModel.selectedMonthYear,
+      settingsService.energyCost,
     );
 
     return ListView(
