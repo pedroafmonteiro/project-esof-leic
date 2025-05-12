@@ -1,5 +1,6 @@
 import 'package:eco_tracker/models/device_model.dart';
 import 'package:eco_tracker/models/graph_data_model.dart';
+import 'package:eco_tracker/services/device_service.dart';
 import 'package:eco_tracker/viewmodels/device_view_model.dart';
 import 'package:eco_tracker/viewmodels/statistics_view_model.dart';
 import 'package:eco_tracker/views/common/general_page.dart';
@@ -66,7 +67,7 @@ class HomeView extends GeneralPage {
                         ),
                   ),
                   Text(
-                    '${data.totalCost} €',
+                    '${data.totalCost.toStringAsFixed(2)} €',
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
@@ -82,7 +83,7 @@ class HomeView extends GeneralPage {
                         ),
                   ),
                   Text(
-                    '${data.totalConsumption} kWh',
+                    '${data.totalConsumption.toStringAsFixed(2)} kWh',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
@@ -96,6 +97,135 @@ class HomeView extends GeneralPage {
         ),
       ),
     );
+  }
+
+  Widget _buildTopThreeCard(BuildContext context, MonthlyChartData data) {
+    final statisticsViewModel = Provider.of<StatisticsViewModel>(context);
+    final monthlyUsage = statisticsViewModel.monthlyUsage;
+
+    if (monthlyUsage == null || monthlyUsage.deviceConsumption.isEmpty) {
+      return GestureDetector(
+        onTap: () {
+          NavigationView.navigateTo(1, statisticsTabIndex: 2);
+        },
+        child: Card(
+          child: ListTile(
+            title: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                'Top energy consumers',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
+            subtitle: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Text(
+                  'No device usage data available',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final deviceConsumptionList = monthlyUsage.deviceConsumption.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    final topDevices = deviceConsumptionList.take(3).toList();
+
+    return FutureBuilder<List<String>>(
+      future: _getDeviceNames(topDevices.map((e) => e.key).toList()),
+      builder: (context, snapshot) {
+        List<String> deviceNames = [];
+
+        if (snapshot.hasData) {
+          deviceNames = snapshot.data!;
+        } else {
+          deviceNames = List.generate(
+            topDevices.length,
+            (index) => 'Device ${index + 1}',
+          );
+        }
+
+        return GestureDetector(
+          onTap: () {
+            NavigationView.navigateTo(1, statisticsTabIndex: 2);
+          },
+          child: Card(
+            child: ListTile(
+              title: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  'Top energy consumers',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              subtitle: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < topDevices.length; i++)
+                          Text(
+                            deviceNames[i],
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        for (var device in topDevices)
+                          Text(
+                            '${device.value.toStringAsFixed(2)} kWh',
+                            style: Theme.of(context).textTheme.labelLarge,
+                            textAlign: TextAlign.right,
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              contentPadding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                bottom: 16.0,
+                top: 8.0,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<String>> _getDeviceNames(List<String> deviceIds) async {
+    final deviceService = DeviceService();
+    List<String> deviceNames = [];
+
+    for (String id in deviceIds) {
+      final device = await deviceService.getDeviceById(id);
+      if (device != null) {
+        deviceNames.add('${device.manufacturer} ${device.model}');
+      } else {
+        deviceNames.add('Unknown Device');
+      }
+    }
+
+    return deviceNames;
   }
 
   Widget _buildTipOfTheDayCard(BuildContext context) {
@@ -152,6 +282,8 @@ class HomeView extends GeneralPage {
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
         _buildUsageSummaryCard(context, data),
+        const SizedBox(height: 8.0),
+        _buildTopThreeCard(context, data),
         const SizedBox(height: 8.0),
         _buildTipOfTheDayCard(context),
       ],

@@ -34,7 +34,17 @@ class TopConsumers extends StatelessWidget {
                   title: FutureBuilder<String>(
                     future: _getDeviceName(entry.key),
                     builder: (context, snapshot) {
-                      return Text(snapshot.data ?? 'Device ${index + 1}');
+                      // Provide a default value when data isn't ready
+                      final displayName = snapshot.connectionState == ConnectionState.done && 
+                                          snapshot.hasData ? 
+                                          snapshot.data! : 
+                                          'Device ${index + 1}';
+                      
+                      return Text(
+                        displayName,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      );
                     },
                   ),
                   subtitle: Text('${entry.value.toStringAsFixed(2)} kWh'),
@@ -66,7 +76,14 @@ class TopConsumers extends StatelessWidget {
   }
 
   Future<String> _getDeviceName(String deviceId) async {
-    final device = await DeviceService().getDeviceById(deviceId);
-    return '${device?.manufacturer} ${device?.model}';
+    try {
+      final device = await DeviceService().getDeviceById(deviceId);
+      return device != null ? 
+          '${device.manufacturer} ${device.model}' : 
+          'Unknown Device';
+    } catch (e) {
+      debugPrint('Error fetching device name: $e');
+      return 'Unknown Device';
+    }
   }
 }
