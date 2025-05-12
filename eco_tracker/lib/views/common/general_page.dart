@@ -66,17 +66,19 @@ abstract class GeneralPage extends StatelessWidget {
                 icon: Hero(
                   tag: "avatar",
                   child: SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: provider.cachedAvatarUrl != null
-                        ? CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: CachedNetworkImageProvider(
-                              provider.cachedAvatarUrl!,
-                            ),
-                          )
-                        : CircleAvatar(backgroundColor: Colors.transparent),
-                  ),
+                      width: 40,
+                      height: 40,
+                      child: provider.cachedAvatarUrl != null
+                          ? CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: CachedNetworkImageProvider(
+                                provider.cachedAvatarUrl!,
+                              ),
+                            )
+                          : const CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              child: Icon(Icons.account_circle_outlined),
+                            ),),
                 ),
               );
             },

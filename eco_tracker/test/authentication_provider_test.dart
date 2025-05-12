@@ -14,24 +14,25 @@ class CustomMockGoogleSignInAccount extends MockGoogleSignInAccount {
 }
 
 class CustomMockGoogleSignIn extends MockGoogleSignIn {
-  final CustomMockGoogleSignInAccount _mockAccount = CustomMockGoogleSignInAccount();
+  final CustomMockGoogleSignInAccount _mockAccount =
+      CustomMockGoogleSignInAccount();
 
   @override
   Future<CustomMockGoogleSignInAccount> signIn() async => _mockAccount;
 
   @override
-  Future<CustomMockGoogleSignInAccount?> signOut() async => null; 
+  Future<CustomMockGoogleSignInAccount?> signOut() async => null;
 }
 
 void main() {
   group('AuthenticationService Tests', () {
     late AuthenticationService authService;
     late MockFirebaseAuth mockAuth;
-    late CustomMockGoogleSignIn mockGoogleSignIn; 
+    late CustomMockGoogleSignIn mockGoogleSignIn;
     late MockUser mockUser;
 
     setUp(() async {
-      SharedPreferences.setMockInitialValues({}); 
+      SharedPreferences.setMockInitialValues({});
       mockUser = MockUser(
         isAnonymous: false,
         uid: 'some-uid',
@@ -40,8 +41,8 @@ void main() {
         photoURL: 'https://example.com/avatar.png',
       );
 
-      mockAuth = MockFirebaseAuth(mockUser: mockUser); 
-      mockGoogleSignIn = CustomMockGoogleSignIn(); 
+      mockAuth = MockFirebaseAuth(mockUser: mockUser);
+      mockGoogleSignIn = CustomMockGoogleSignIn();
 
       authService = AuthenticationService(
         firebaseAuth: mockAuth,
@@ -63,7 +64,7 @@ void main() {
       final user = userCredential.user;
 
       expect(user, isNotNull);
-      expect(user!.email, mockUser.email); 
+      expect(user!.email, mockUser.email);
     });
 
     test('signOut should clear currentUser and cached avatar', () async {

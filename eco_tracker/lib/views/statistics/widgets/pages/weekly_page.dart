@@ -5,6 +5,8 @@ import 'package:eco_tracker/views/statistics/widgets/statistics_card.dart';
 import 'package:eco_tracker/views/statistics/widgets/top_consumers.dart'; // Import for TopConsumers widget
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:eco_tracker/services/settings_service.dart';
+
 
 class WeeklyView extends StatelessWidget {
   const WeeklyView({super.key});
@@ -31,8 +33,10 @@ class WeeklyView extends StatelessWidget {
       return const Center(child: Text('No data available for this week.'));
     }
 
+    final energyCost = Provider.of<SettingsService>(context, listen: false).energyCost;
+
     final chartData =
-        WeeklyChartData.fromWeeklySummary(weeklyUsage.dailyConsumption);
+    WeeklyChartData.fromWeeklySummary(weeklyUsage.dailyConsumption, energyCost);
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -89,9 +93,9 @@ class WeeklyView extends StatelessWidget {
   }
 
   Future<void> _selectWeek(
-    BuildContext context,
-    StatisticsViewModel viewModel,
-  ) async {
+      BuildContext context,
+      StatisticsViewModel viewModel,
+      ) async {
     final currentYear = viewModel.selectedWeekYear;
     final currentWeek = viewModel.selectedWeekNumber;
 

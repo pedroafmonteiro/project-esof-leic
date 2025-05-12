@@ -60,7 +60,8 @@ void main() {
 
       // Act
       final tips = await tipsService.loadTips();
-      final daysSinceEpoch = DateTime.now().difference(DateTime(1970, 1, 1)).inDays;
+      final daysSinceEpoch =
+          DateTime.now().difference(DateTime(1970, 1, 1)).inDays;
       final tipOfTheDay = tips[daysSinceEpoch % tips.length];
 
       // Assert

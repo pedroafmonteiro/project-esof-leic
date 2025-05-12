@@ -22,7 +22,8 @@ void main() {
   }
 
   group('HomeView - Tip of the Day', () {
-    testWidgets('shows loading indicator while waiting for tip', (tester) async {
+    testWidgets('shows loading indicator while waiting for tip',
+        (tester) async {
       // Arrange - delay the response to test loading state
       when(mockTipsService.getTodaysTip()).thenAnswer(
         (_) => Future.delayed(const Duration(seconds: 1), () => 'Test tip'),
@@ -57,9 +58,11 @@ void main() {
       expect(find.byType(ListTile), findsOneWidget);
     });
 
-    testWidgets('displays error message when tip loading fails', (tester) async {
+    testWidgets('displays error message when tip loading fails',
+        (tester) async {
       // Arrange
-      when(mockTipsService.getTodaysTip()).thenThrow(Exception('Failed to load'));
+      when(mockTipsService.getTodaysTip())
+          .thenThrow(Exception('Failed to load'));
 
       // Act
       await tester.pumpWidget(createHomeViewUnderTest());
@@ -71,9 +74,11 @@ void main() {
       expect(find.byType(Card), findsNothing);
     });
 
-    testWidgets('displays "No tip available" when data is null', (tester) async {
+    testWidgets('displays "No tip available" when data is null',
+        (tester) async {
       // Arrange
-      when(mockTipsService.getTodaysTip()).thenAnswer((_) async => 'No tips available');
+      when(mockTipsService.getTodaysTip())
+          .thenAnswer((_) async => 'No tips available');
 
       // Act
       await tester.pumpWidget(createHomeViewUnderTest());
@@ -96,9 +101,10 @@ void main() {
       // Assert
       final card = tester.widget<Card>(find.byType(Card));
       expect(card.margin, equals(const EdgeInsets.all(16)));
-      
+
       // Verify the card uses the correct theme color
-      final colorScheme = Theme.of(tester.element(find.byType(Card))).colorScheme;
+      final colorScheme =
+          Theme.of(tester.element(find.byType(Card))).colorScheme;
       expect(card.color, equals(colorScheme.tertiaryContainer));
     });
   });
@@ -115,7 +121,7 @@ void main() {
       // Assert
       // Verify title from GeneralPage
       expect(find.text('Home'), findsOneWidget);
-      
+
       // Verify FAB from GeneralPage
       expect(find.byType(FloatingActionButton), findsOneWidget);
       expect(find.byIcon(Icons.bolt), findsOneWidget);
