@@ -88,7 +88,7 @@ class SettingsService extends ChangeNotifier {
     _materialYou = prefs.getBool(_materialYouKey) ?? false;
     _accentColor = Color(prefs.getInt(_accentColorKey) ?? Colors.green.value);
     notifyListeners();
-    _energyCost = prefs.getDouble('energyCost') ?? 0.15;
+    _energyCost = prefs.getDouble(_energyCostKey) ?? 0.15;
     notifyListeners();
 
   }
@@ -122,7 +122,7 @@ class SettingsService extends ChangeNotifier {
   Future<void> setEnergyCost(double newCost) async {
     _energyCost = newCost;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('energyCost', newCost);
+    await prefs.setDouble(_energyCostKey, newCost);
     notifyListeners();
   }
 }
