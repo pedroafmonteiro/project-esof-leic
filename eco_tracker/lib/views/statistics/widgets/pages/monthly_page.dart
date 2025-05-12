@@ -6,6 +6,8 @@ import 'package:eco_tracker/views/statistics/widgets/top_consumers.dart'; // Imp
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:eco_tracker/services/settings_service.dart';
+
 
 class MonthlyView extends StatelessWidget {
   const MonthlyView({super.key});
@@ -35,10 +37,13 @@ class MonthlyView extends StatelessWidget {
     final monthName = DateFormat('MMMM')
         .format(DateTime(viewModel.selectedMonthYear, viewModel.selectedMonth));
 
+    final energyCost = Provider.of<SettingsService>(context, listen: false).energyCost;
+
     final chartData = MonthlyChartData.fromMonthlySummary(
       monthlyUsage.dailyConsumption,
       viewModel.selectedMonth,
       viewModel.selectedMonthYear,
+      energyCost,
     );
 
     return ListView(
@@ -96,9 +101,9 @@ class MonthlyView extends StatelessWidget {
   }
 
   Future<void> _selectMonth(
-    BuildContext context,
-    StatisticsViewModel viewModel,
-  ) async {
+      BuildContext context,
+      StatisticsViewModel viewModel,
+      ) async {
     final currentMonth = viewModel.selectedMonth;
     final currentYear = viewModel.selectedMonthYear;
 

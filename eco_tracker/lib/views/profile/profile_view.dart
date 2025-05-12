@@ -24,16 +24,18 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settingsService = Provider.of<SettingsService>(context);
+    final costController = TextEditingController(
+      text: settingsService.energyCost.toStringAsFixed(2),
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(forceMaterialTransparency: true),
       body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8.0,
             children: [
               Center(
                 child: Hero(
@@ -55,15 +57,19 @@ class ProfileView extends StatelessWidget {
                       height: 200,
                       child: avatarUrl != null
                           ? CircleAvatar(
-                              radius: 100,
-                              backgroundColor: Colors.transparent,
-                              backgroundImage: CachedNetworkImageProvider(
-                                avatarUrl!,
-                              ),
-                            )
-                          : CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                            ),
+                        radius: 100,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: CachedNetworkImageProvider(
+                          avatarUrl!,
+                        ),
+                      )
+                          : const CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: Icon(
+                          Icons.account_circle_outlined,
+                          size: 200,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -86,28 +92,30 @@ class ProfileView extends StatelessWidget {
                     return Text(
                       email,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                        color:
+                        Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     );
                   },
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16),
               Text(
                 "Settings",
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 8),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Column(
                   children: [
-                    /* Row(
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: Column(
@@ -116,19 +124,13 @@ class ProfileView extends StatelessWidget {
                               Text(
                                 "Energy cost at your location",
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
                               ),
                               Text(
                                 "(€ per kWh)",
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   fontSize: 12,
                                 ),
                               ),
@@ -138,33 +140,45 @@ class ProfileView extends StatelessWidget {
                         SizedBox(
                           width: 60,
                           child: TextField(
-                            controller: TextEditingController(text: "0.15"),
-                            keyboardType: TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
+                            controller: costController,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
-                            onChanged: (value) {},
+                            onSubmitted: (value) {
+                              final parsed = double.tryParse(value);
+                              if (parsed != null && parsed >= 0) {
+                                settingsService.setEnergyCost(parsed);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text('Please enter a valid, positive number.'),
+                                    backgroundColor: Theme.of(context).colorScheme.error,
+                                  ),
+                                );
+                              }
+                            },
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.symmetric(vertical: 8.0),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0), */
+                    const SizedBox(height: 16),
+
+                    // DARK MODE
                     Row(
                       children: [
                         Text(
                           "Dark mode",
                           style: TextStyle(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Switch(
                           value: settingsService.darkMode,
                           onChanged: (value) {
@@ -173,17 +187,18 @@ class ProfileView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16),
+
+                    // MATERIAL YOU
                     Row(
                       children: [
                         Text(
                           "Material You",
                           style: TextStyle(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Switch(
                           value: settingsService.materialYou,
                           onChanged: (value) {
@@ -192,22 +207,21 @@ class ProfileView extends StatelessWidget {
                         ),
                       ],
                     ),
+
+                    // ACCENT COLOR
                     if (!settingsService.materialYou) ...[
-                      SizedBox(height: 16.0),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Text(
                             "Accent color",
                             style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           GestureDetector(
                             onTap: () {
-                              // Show color selection dialog
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -217,12 +231,10 @@ class ProfileView extends StatelessWidget {
                                       spacing: 10,
                                       runSpacing: 10,
                                       alignment: WrapAlignment.center,
-                                      children: SettingsService.predefinedColors
-                                          .map((option) {
+                                      children: SettingsService.predefinedColors.map((option) {
                                         return GestureDetector(
                                           onTap: () {
-                                            settingsService
-                                                .setAccentColor(option.color);
+                                            settingsService.setAccentColor(option.color);
                                             Navigator.of(context).pop();
                                           },
                                           child: Container(
@@ -232,30 +244,22 @@ class ProfileView extends StatelessWidget {
                                               color: option.color,
                                               shape: BoxShape.circle,
                                               border: Border.all(
-                                                color: settingsService
-                                                            .accentColor ==
-                                                        option.color
+                                                color: settingsService.accentColor == option.color
                                                     ? Colors.white
                                                     : Colors.transparent,
                                                 width: 2,
                                               ),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
+                                                  color: Colors.black.withOpacity(0.2),
                                                   blurRadius: 5,
-                                                  offset: Offset(0, 2),
+                                                  offset: const Offset(0, 2),
                                                 ),
                                               ],
                                             ),
-                                            child:
-                                                settingsService.accentColor ==
-                                                        option.color
-                                                    ? Icon(
-                                                        Icons.check,
-                                                        color: Colors.white,
-                                                      )
-                                                    : null,
+                                            child: settingsService.accentColor == option.color
+                                                ? const Icon(Icons.check, color: Colors.white)
+                                                : null,
                                           ),
                                         );
                                       }).toList(),
@@ -283,12 +287,11 @@ class ProfileView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.0),
                     ],
                   ],
                 ),
               ),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 8),
               Center(
                 child: Consumer<AuthenticationService>(
                   builder: (context, provider, child) {
@@ -301,7 +304,7 @@ class ProfileView extends StatelessWidget {
                           }
                         });
                       },
-                      child: Text("Sign out"),
+                      child: const Text("Sign out"),
                     );
                   },
                 ),
