@@ -7,7 +7,6 @@ class SettingsManager {
   static int? _accentColor;
   static double? _energyCost;
 
-
   static bool get darkMode => _darkMode ?? false;
   static bool get materialYou => _materialYou ?? false;
   static Color get accentColor => Color(_accentColor ?? Colors.green.value);
@@ -27,7 +26,6 @@ class SettingsService extends ChangeNotifier {
   static const String _materialYouKey = 'materialYou';
   static const String _accentColorKey = 'accentColor';
   static const String _energyCostKey = 'energyCost';
-
 
   static const List<PredefinedColor> predefinedColors = [
     PredefinedColor(name: 'Red', color: Colors.red),
@@ -90,7 +88,6 @@ class SettingsService extends ChangeNotifier {
     notifyListeners();
     _energyCost = prefs.getDouble(_energyCostKey) ?? 0.15;
     notifyListeners();
-
   }
 
   Future<void> setDarkMode(bool value) async {
@@ -119,6 +116,7 @@ class SettingsService extends ChangeNotifier {
     await prefs.setInt(_accentColorKey, color.value);
     notifyListeners();
   }
+
   Future<void> setEnergyCost(double newCost) async {
     _energyCost = newCost;
     final prefs = await SharedPreferences.getInstance();
@@ -133,4 +131,3 @@ class PredefinedColor {
 
   const PredefinedColor({required this.name, required this.color});
 }
-
