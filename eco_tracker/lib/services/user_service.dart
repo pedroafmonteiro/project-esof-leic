@@ -2,8 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class UserService {
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseDatabase _database;
+  final FirebaseAuth _auth;
+
+  UserService({
+    FirebaseDatabase? database,
+    FirebaseAuth? auth,
+  })  : _database = database ?? FirebaseDatabase.instance,
+        _auth = auth ?? FirebaseAuth.instance;
+
+  // Getters to allow access for testing
+  FirebaseDatabase get database => _database;
+  FirebaseAuth get auth => _auth;
 
   Future<String> getUserRole() async {
     final user = _auth.currentUser;

@@ -50,10 +50,10 @@ class Device {
 
   factory Device.fromJson(Map<String, dynamic> json) {
     return Device(
-      id: json['id'],
-      model: json['model'],
-      manufacturer: json['manufacturer'],
-      category: json['category'],
+      id: json['id'] ?? '',
+      model: json['model'] ?? '',
+      manufacturer: json['manufacturer'] ?? '',
+      category: json['category'] ?? '',
       powerConsumption: json['powerConsumption'] is num
           ? (json['powerConsumption'] as num).toInt()
           : 0,
