@@ -13,7 +13,11 @@ class DeviceViewModel extends ChangeNotifier {
 
   DeviceViewModel({DeviceService? deviceService})
       : _deviceService = deviceService ?? DeviceService() {
-    loadDevices();
+    loadDevices().catchError((error) {
+      // Log error but don't rethrow to avoid breaking constructor
+      // The error will be handled when loadDevices is called explicitly
+      print('Error loading devices in constructor: $error');
+    });
   }
 
   Future<void> loadDevices() async {
