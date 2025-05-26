@@ -405,6 +405,58 @@ Retrospectives:
 - What did well: we achieved what we planned for this sprint, home page totally done and a redesign of the login page, more auth options for those who don't have a google account, an estimated electricity cost feature and dynamic coloring for the user to customize their app.
 - What should we do differently: better organize the project issues across team members and a better sprint planning.
 
+Happiness Meters(sprint3):
+
+<table border="1" cellspacing="0" cellpadding="10">
+  <tr>
+    <th></th>
+    <th>João</th>
+    <th>Pedro</th>
+    <th>Rodrigo</th>
+    <th>Guilherme</th>
+    <th>Vicente</th>
+  </tr>
+  <tr>
+    <th>João</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Pedro</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Rodrigo</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+  <tr>
+    <th>Guilherme</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+  </tr>
+    <th>Vicente</th>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+    <td>⭐ Excellent</td>
+</table>
+
+
 ### Final Release
 
 
