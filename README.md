@@ -1,5 +1,10 @@
 # EcoTracker Development Report
 
+## WARNING  
+> If you want to build this app manually, you will have to go through the Firebase process yourself.  
+There are some API keys in the codebase, which will not work for you. The Android API key can only be used on some apps with a certain certificate attached to it and the iOS and Web API keys were deleted and cannot be used anymore.  
+**If you want to test the app, you can install the latest version from the releases page.**
+
 Welcome to the documentation pages of EcoTracker!
 
 This Software Development Report, tailored for LEIC-ES-2024-25, provides comprehensive details about EcoTracker, from high-level vision to low-level implementation decisions. It’s organised by the following activities. 
